@@ -1,0 +1,224 @@
+Fabricantes:[
+  {
+    "nome": "Bosch",
+    "cnpj": "12345678901234"
+  },
+  {
+    "nome": "Makita",
+    "cnpj": "98765432109876"
+  },
+  {
+    "nome": "DeWalt",
+    "cnpj": "11223344556677"
+  },
+  {
+    "nome": "Black+Decker",
+    "cnpj": "22334455667788"
+  },
+  {
+    "nome": "Stanley",
+    "cnpj": "33445566778899"
+  }
+]
+
+Peças:[
+  {
+    "nome": "Vela de Ignição",
+    "descricao": "Vela de ignição original, alta durabilidade.",
+    "preco_unitario": 25.90,
+    "id_categoria": 1,
+    "id_fabricante": 1
+  },
+  {
+    "nome": "Filtro de Óleo do Motor",
+    "descricao": "Filtro de óleo premium, compatível com motores a gasolina e diesel.",
+    "preco_unitario": 35.50,
+    "id_categoria": 1,
+    "id_fabricante": 5
+  },
+  {
+    "nome": "Bomba de Combustível",
+    "descricao": "Bomba de combustível elétrica de alta pressão.",
+    "preco_unitario": 195.00,
+    "id_categoria": 1,
+    "id_fabricante": 1
+  },
+  {
+    "nome": "Correia Dentada",
+    "descricao": "Correia de sincronismo reforçada, para alta quilometragem.",
+    "preco_unitario": 89.90,
+    "id_categoria": 1,
+    "id_fabricante": 3
+  },
+
+  // --- CATEGORIA 2: FREIOS (4 Peças) ---
+  {
+    "nome": "Pastilha de Freio Cerâmica",
+    "descricao": "Conjunto de pastilhas de freio cerâmica, silenciosas.",
+    "preco_unitario": 180.50,
+    "id_categoria": 2,
+    "id_fabricante": 1
+  },
+  {
+    "nome": "Disco de Freio Ventilado",
+    "descricao": "Disco de freio dianteiro ventilado, vendido por unidade.",
+    "preco_unitario": 120.90,
+    "id_categoria": 2,
+    "id_fabricante": 3
+  },
+  {
+    "nome": "Cilindro Mestre do Freio",
+    "descricao": "Cilindro mestre do freio com reservatório, peça de reposição.",
+    "preco_unitario": 250.00,
+    "id_categoria": 2,
+    "id_fabricante": 4
+  },
+  {
+    "nome": "Fluido de Freio DOT 4 (Litro)",
+    "descricao": "Fluido de freio sintético, padrão DOT 4.",
+    "preco_unitario": 45.00,
+    "id_categoria": 2,
+    "id_fabricante": 5
+  },
+
+  // --- CATEGORIA 4: SUSPENSAO (4 Peças) ---
+  {
+    "nome": "Amortecedor Dianteiro (Par)",
+    "descricao": "Amortecedores a gás de alta performance.",
+    "preco_unitario": 450.00,
+    "id_categoria": 4,
+    "id_fabricante": 3
+  },
+  {
+    "nome": "Pivô de Suspensão",
+    "descricao": "Pivô da bandeja de suspensão, reforçado.",
+    "preco_unitario": 68.90,
+    "id_categoria": 4,
+    "id_fabricante": 1
+  },
+  {
+    "nome": "Bandeja de Suspensão",
+    "descricao": "Bandeja de suspensão completa com buchas.",
+    "preco_unitario": 185.00,
+    "id_categoria": 4,
+    "id_fabricante": 4
+  },
+  {
+    "nome": "Mola Helicoidal (Unidade)",
+    "descricao": "Mola da suspensão traseira, para veículos de carga.",
+    "preco_unitario": 110.00,
+    "id_categoria": 4,
+    "id_fabricante": 2
+  },
+
+  // --- CATEGORIA 5: ELETRICA (4 Peças) ---
+  {
+    "nome": "Bateria 60Ah",
+    "descricao": "Bateria automotiva 12V 60Ah, livre de manutenção.",
+    "preco_unitario": 399.99,
+    "id_categoria": 5,
+    "id_fabricante": 4
+  },
+  {
+    "nome": "Alternador",
+    "descricao": "Alternador de 90 Amperes, peça de reposição original.",
+    "preco_unitario": 650.00,
+    "id_categoria": 5,
+    "id_fabricante": 1
+  },
+  {
+    "nome": "Motor de Partida",
+    "descricao": "Motor de partida de alto torque, 12V.",
+    "preco_unitario": 420.00,
+    "id_categoria": 5,
+    "id_fabricante": 3
+  },
+  {
+    "nome": "Fusível Lâmina (Kit 20 Peças)",
+    "descricao": "Kit de fusíveis automotivos variados (5A a 30A).",
+    "preco_unitario": 22.50,
+    "id_categoria": 5,
+    "id_fabricante": 5
+  },
+
+  // --- CATEGORIA 6: TRANSMISSAO (4 Peças) ---
+  {
+    "nome": "Óleo para Câmbio Automático",
+    "descricao": "Fluido sintético para transmissão automática (1 Litro).",
+    "preco_unitario": 75.00,
+    "id_categoria": 6,
+    "id_fabricante": 1
+  },
+  {
+    "nome": "Kit Embreagem",
+    "descricao": "Kit completo de embreagem (Platô, Disco e Rolamento).",
+    "preco_unitario": 550.00,
+    "id_categoria": 6,
+    "id_fabricante": 2
+  },
+  {
+    "nome": "Junta Homocinética",
+    "descricao": "Junta homocinética lado roda, com coifa e graxa.",
+    "preco_unitario": 130.00,
+    "id_categoria": 6,
+    "id_fabricante": 4
+  },
+  {
+    "nome": "Cabo de Embreagem",
+    "descricao": "Cabo de embreagem com revestimento de teflon.",
+    "preco_unitario": 55.90,
+    "id_categoria": 6,
+    "id_fabricante": 3
+  }
+
+  // --- CATEGORIA 7: ACESSORIOS (7 Peças) ---
+  {
+    "nome": "Tapete de Borracha Universal (Jogo)",
+    "descricao": "Jogo de tapetes de borracha antiderrapante, 4 peças, fácil limpeza.",
+    "preco_unitario": 85.00,
+    "id_categoria": 7,
+    "id_fabricante": 5
+  },
+  {
+    "nome": "Suporte Veicular para Celular",
+    "descricao": "Suporte magnético para fixação no painel ou saída de ar.",
+    "preco_unitario": 39.90,
+    "id_categoria": 7,
+    "id_fabricante": 4
+  },
+  {
+    "nome": "Capa de Volante em Couro Sintético",
+    "descricao": "Capa protetora para volante, costurada, melhora a empunhadura.",
+    "preco_unitario": 55.00,
+    "id_categoria": 7,
+    "id_fabricante": 3
+  },
+  {
+    "nome": "Central Multimídia 7 polegadas",
+    "descricao": "Central com tela touchscreen, Bluetooth, USB e compatível com câmera de ré.",
+    "preco_unitario": 799.00,
+    "id_categoria": 7,
+    "id_fabricante": 1
+  },
+  {
+    "nome": "Câmera de Ré com Visão Noturna",
+    "descricao": "Câmera de ré à prova d'água, com linhas guia e infravermelho.",
+    "preco_unitario": 140.00,
+    "id_categoria": 7,
+    "id_fabricante": 1
+  },
+  {
+    "nome": "Carregador Veicular USB Duplo",
+    "descricao": "Carregador rápido (QC 3.0), duas portas USB, plugue 12V.",
+    "preco_unitario": 49.90,
+    "id_categoria": 7,
+    "id_fabricante": 4
+  },
+  {
+    "nome": "Sensor de Estacionamento 4 Pontos",
+    "descricao": "Kit sensor de estacionamento traseiro, com display digital e 4 sensores.",
+    "preco_unitario": 165.00,
+    "id_categoria": 7,
+    "id_fabricante": 3
+  }
+]

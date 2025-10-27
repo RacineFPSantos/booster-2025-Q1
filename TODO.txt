@@ -1,0 +1,9 @@
+TODO:
+- Validar os Erros de Login: LoginModal.tsx linha-44
+- Validar os Erros de Register: Register.tsx linha-45
+- auth.types.ts entender o erro
+- Adicionar Validação CPF / CNPJ na criação momento BACKEND
+- Area serviços Backend
+
+DONE:
+- Feito Validação CPF / CNPJ na criação momento FRONTEND
