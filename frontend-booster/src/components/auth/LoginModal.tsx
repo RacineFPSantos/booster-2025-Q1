@@ -55,6 +55,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       }
 
       setError(errorMessage);
+      setSenha("");
     } finally {
       setIsLoading(false);
     }

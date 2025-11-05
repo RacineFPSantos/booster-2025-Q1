@@ -53,7 +53,6 @@ export function Cadastro() {
     e.preventDefault();
     setError("");
 
-    // Validações
     if (formData.senha !== formData.confirmarSenha) {
       setError("As senhas não coincidem");
       return;
@@ -66,7 +65,6 @@ export function Cadastro() {
 
     setIsLoading(true);
 
-    // Simulação de cadastro - aqui você conectará com sua API
     setTimeout(() => {
       setIsSuccess(true);
       setIsLoading(false);

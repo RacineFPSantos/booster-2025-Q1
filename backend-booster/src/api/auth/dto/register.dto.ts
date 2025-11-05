@@ -1,4 +1,11 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString, Length, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  Length,
+  MinLength,
+} from 'class-validator';
 import { TipoClienteEnum } from '@shared/enums/database.enums';
 
 /**
@@ -22,10 +29,14 @@ export class RegisterDto {
 
   @IsString()
   @IsNotEmpty()
-  @Length(11, 14, { message: 'Documento deve ter entre 11 (CPF) e 14 (CNPJ) caracteres' })
+  @Length(11, 14, {
+    message: 'Documento deve ter entre 11 (CPF) e 14 (CNPJ) caracteres',
+  })
   documento: string;
 
-  @IsEnum(TipoClienteEnum, { message: 'Tipo de cliente inválido. Use: PF ou PJ' })
+  @IsEnum(TipoClienteEnum, {
+    message: 'Tipo de cliente inválido. Use: PF ou PJ',
+  })
   @IsNotEmpty()
   tipo_cliente: TipoClienteEnum;
 }

@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { EntityManager, Repository } from 'typeorm';
@@ -19,12 +15,7 @@ export class UserService {
     private readonly entityManager: EntityManager,
   ) {}
 
-  /**
-   * Cria um novo usuário (usado por ADMINs)
-   * Permite definir a role
-   */
   async create(createUserDto: CreateUserDto) {
-    // 1. Verificar se o email já existe
     const existingUser = await this.usersRepository.findOne({
       where: { email: createUserDto.email },
     });
@@ -33,7 +24,6 @@ export class UserService {
       throw new ConflictException('Email já cadastrado');
     }
 
-    // 2. Verificar se o documento já existe
     const existingDocument = await this.usersRepository.findOne({
       where: { documento: createUserDto.documento },
     });
@@ -42,20 +32,16 @@ export class UserService {
       throw new ConflictException('Documento já cadastrado');
     }
 
-    // 3. Hash da senha com Argon2
     const hashedPassword = await argon2.hash(createUserDto.senha);
 
-    // 4. Criar o usuário
     const user = this.usersRepository.create({
       ...createUserDto,
       senha: hashedPassword,
       role: createUserDto.role || UserRole.CLIENT, // Default: CLIENT
     });
 
-    // 5. Salvar no banco
     const savedUser = await this.entityManager.save(user);
 
-    // 6. Remover a senha do retorno
     const { senha, ...userWithoutPassword } = savedUser;
     return userWithoutPassword;
   }

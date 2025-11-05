@@ -24,6 +24,14 @@ CREATE TYPE status_pedido_enum AS ENUM (
     'CANCELADO'
 );
 
+CREATE TYPE status_agendamento_enum AS ENUM (
+    'PENDENTE',
+    'CONFIRMADO',
+    'EM_ANDAMENTO',
+    'CONCLUIDO',
+    'CANCELADO'
+);
+
 CREATE TABLE pedido (
     id_pedido SERIAL PRIMARY KEY,
     id_cliente INT NOT NULL,
@@ -40,10 +48,22 @@ CREATE TABLE pedido (
 
 CREATE TABLE pedido_item (
     id_pedido_item SERIAL PRIMARY KEY,
-    id_pedido INT REFERENCES pedido(id_pedido),
-    id_produto INT,
-    quantidade INT NOT NULL,
-    preco_unitario DECIMAL(10,2) NOT NULL
+    id_pedido INT NOT NULL,
+    id_produto INT NULL,
+    id_servico INT NULL,
+    quantidade INT NOT NULL DEFAULT 1,
+    preco_unitario DECIMAL(10,2) NOT NULL CHECK (preco_unitario >= 0),
+
+    -- Um pedido_item deve ter OU produto OU serviço, mas não ambos
+    CONSTRAINT chk_produto_ou_servico
+        CHECK ((id_produto IS NOT NULL AND id_servico IS NULL) OR
+               (id_produto IS NULL AND id_servico IS NOT NULL)),
+
+    -- Chave estrangeira para pedido
+    CONSTRAINT fk_pedido_item_pedido
+        FOREIGN KEY (id_pedido)
+        REFERENCES pedido(id_pedido)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE categoria (
@@ -82,6 +102,83 @@ CREATE TRIGGER trigger_produto_updated_at
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
+-- ============================================
+-- TABELAS DE SERVIÇOS
+-- ============================================
+
+CREATE TABLE tipo_servico (
+    id_tipo_servico SERIAL PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL UNIQUE,
+    descricao TEXT,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TRIGGER trigger_tipo_servico_updated_at
+    BEFORE UPDATE ON tipo_servico
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TABLE servico (
+    id_servico SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    preco DECIMAL(10,2) NOT NULL CHECK (preco >= 0),
+    duracao_estimada INT NOT NULL CHECK (duracao_estimada > 0), -- em minutos
+    id_tipo_servico INT NOT NULL,
+    ativo BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+
+    -- Chave estrangeira
+    CONSTRAINT fk_servico_tipo_servico
+        FOREIGN KEY (id_tipo_servico)
+        REFERENCES tipo_servico(id_tipo_servico)
+        ON DELETE RESTRICT
+);
+
+CREATE TRIGGER trigger_servico_updated_at
+    BEFORE UPDATE ON servico
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Tabela de agendamento de serviços
+CREATE TABLE agendamento (
+    id_agendamento SERIAL PRIMARY KEY,
+    id_cliente INT NOT NULL,
+    id_servico INT NOT NULL,
+    data_agendamento DATE NOT NULL,
+    hora_agendamento TIME NOT NULL,
+    observacoes TEXT,
+    status status_agendamento_enum NOT NULL DEFAULT 'PENDENTE',
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+
+    -- Chaves estrangeiras
+    CONSTRAINT fk_agendamento_cliente
+        FOREIGN KEY (id_cliente)
+        REFERENCES cliente(id_cliente)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT fk_agendamento_servico
+        FOREIGN KEY (id_servico)
+        REFERENCES servico(id_servico)
+        ON DELETE RESTRICT,
+
+    -- Não permitir dois agendamentos no mesmo horário
+    CONSTRAINT uk_agendamento_data_hora
+        UNIQUE (data_agendamento, hora_agendamento)
+);
+
+CREATE TRIGGER trigger_agendamento_updated_at
+    BEFORE UPDATE ON agendamento
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================
+-- TABELA DE ESTOQUE (PRODUTOS)
+-- ============================================
+
 CREATE TABLE estoque (
     id_produto INT PRIMARY KEY,
     quantidade INT NOT NULL DEFAULT 0 CHECK (quantidade >= 0),
@@ -110,3 +207,38 @@ BEGIN
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+-- ============================================
+-- FOREIGN KEYS ADICIONAIS
+-- ============================================
+
+-- Adicionar FK de pedido_item para produto
+ALTER TABLE pedido_item
+    ADD CONSTRAINT fk_pedido_item_produto
+        FOREIGN KEY (id_produto)
+        REFERENCES produto(id_produto)
+        ON DELETE RESTRICT;
+
+-- Adicionar FK de pedido_item para servico
+ALTER TABLE pedido_item
+    ADD CONSTRAINT fk_pedido_item_servico
+        FOREIGN KEY (id_servico)
+        REFERENCES servico(id_servico)
+        ON DELETE RESTRICT;
+
+-- ============================================
+-- COMENTÁRIOS NAS TABELAS
+-- ============================================
+
+COMMENT ON TABLE pedido IS 'Tabela de pedidos que pode conter produtos e/ou serviços';
+COMMENT ON TABLE pedido_item IS 'Itens do pedido - pode ser produto OU serviço (não ambos)';
+COMMENT ON COLUMN pedido_item.id_produto IS 'ID do produto (NULL se for serviço)';
+COMMENT ON COLUMN pedido_item.id_servico IS 'ID do serviço (NULL se for produto)';
+COMMENT ON COLUMN pedido_item.quantidade IS 'Quantidade do item (normalmente 1 para serviços)';
+
+COMMENT ON TABLE servico IS 'Catálogo de serviços oferecidos pela oficina';
+COMMENT ON COLUMN servico.duracao_estimada IS 'Duração estimada do serviço em minutos';
+COMMENT ON COLUMN servico.ativo IS 'Indica se o serviço está disponível para agendamento';
+
+COMMENT ON TABLE agendamento IS 'Agendamentos de serviços dos clientes';
+COMMENT ON CONSTRAINT uk_agendamento_data_hora ON agendamento IS 'Garante que não há dois agendamentos no mesmo horário';

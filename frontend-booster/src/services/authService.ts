@@ -1,5 +1,10 @@
-import { api } from '@/lib/axios';
-import type { LoginRequest, RegisterRequest, AuthResponse, User } from '@/types/auth.types';
+import { api } from "@/lib/axios";
+import type {
+  LoginRequest,
+  RegisterRequest,
+  AuthResponse,
+  User,
+} from "@/types/auth.types";
 
 /**
  * Serviço de Autenticação
@@ -10,48 +15,62 @@ export class AuthService {
    * Faz login do usuário
    */
   static async login(credentials: LoginRequest): Promise<AuthResponse> {
-    const response = await api.post<AuthResponse>('/auth/login', credentials);
+    try {
+      const response = await api.post<AuthResponse>("/auth/login", credentials);
 
-    // Salvar token e dados do usuário no localStorage
-    localStorage.setItem('access_token', response.data.access_token);
-    localStorage.setItem('user', JSON.stringify(response.data.user));
+      // Salvar token e dados do usuário no localStorage
+      localStorage.setItem("access_token", response.data.access_token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
 
-    return response.data;
+      return response.data;
+    } catch (error: any) {
+      // Extrair a mensagem de erro do backend
+      const errorMessage =
+        error?.response?.data?.message || "Erro ao fazer login";
+      throw new Error(errorMessage);
+    }
   }
 
   /**
    * Registra um novo usuário (sempre como CLIENT)
    */
   static async register(data: RegisterRequest): Promise<AuthResponse> {
-    const response = await api.post<AuthResponse>('/auth/register', data);
+    try {
+      const response = await api.post<AuthResponse>("/auth/register", data);
 
-    // Salvar token e dados do usuário no localStorage
-    localStorage.setItem('access_token', response.data.access_token);
-    localStorage.setItem('user', JSON.stringify(response.data.user));
+      // Salvar token e dados do usuário no localStorage
+      localStorage.setItem("access_token", response.data.access_token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
 
-    return response.data;
+      return response.data;
+    } catch (error: any) {
+      // Extrair a mensagem de erro do backend
+      const errorMessage =
+        error?.response?.data?.message || "Erro ao criar conta";
+      throw new Error(errorMessage);
+    }
   }
 
   /**
    * Faz logout do usuário
    */
   static logout(): void {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
   }
 
   /**
    * Verifica se o usuário está autenticado
    */
   static isAuthenticated(): boolean {
-    return !!localStorage.getItem('access_token');
+    return !!localStorage.getItem("access_token");
   }
 
   /**
    * Retorna o usuário logado (do localStorage)
    */
   static getCurrentUser(): User | null {
-    const userStr = localStorage.getItem('user');
+    const userStr = localStorage.getItem("user");
     if (!userStr) return null;
 
     try {
@@ -65,14 +84,14 @@ export class AuthService {
    * Retorna o token de acesso
    */
   static getToken(): string | null {
-    return localStorage.getItem('access_token');
+    return localStorage.getItem("access_token");
   }
 
   /**
    * Busca o perfil do usuário logado (do servidor)
    */
   static async getProfile(): Promise<User> {
-    const response = await api.get<{ user: User }>('/user/me/profile');
+    const response = await api.get<{ user: User }>("/user/me/profile");
     return response.data.user;
   }
 }

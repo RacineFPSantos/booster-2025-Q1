@@ -28,25 +28,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     super({
-      // 1. Extrair o token do header Authorization: Bearer <token>
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-
-      // 2. Rejeitar tokens expirados
       ignoreExpiration: false,
-
-      // 3. Chave secreta para validar o token
       secretOrKey: secret,
     });
   }
 
-  /**
-   * Método executado automaticamente após o token ser validado
-   * Aqui buscamos o usuário no banco para garantir que ele ainda existe
-   */
   async validate(payload: JwtPayload) {
     const { sub: id } = payload;
 
-    // Buscar usuário no banco
     const user = await this.userRepository.findOne({
       where: { id_user: id },
     });
@@ -55,7 +45,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Usuário não encontrado');
     }
 
-    // Retorna o usuário - ele será anexado ao request como req.user
     return {
       id: user.id_user,
       email: user.email,

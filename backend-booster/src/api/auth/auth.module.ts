@@ -10,13 +10,10 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
-    // Importar a entidade User para usar no repositório
     TypeOrmModule.forFeature([User]),
 
-    // Configurar Passport
     PassportModule.register({ defaultStrategy: 'jwt' }),
 
-    // Configurar JWT
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -28,7 +25,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
         return {
           secret,
           signOptions: {
-            expiresIn: '1d', // 1 dia
+            expiresIn: '1d',
           },
         };
       },
@@ -36,6 +33,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
-  exports: [AuthService, JwtStrategy, PassportModule], // Exportar para usar em outros módulos
+  exports: [AuthService, JwtStrategy, PassportModule],
 })
 export class AuthModule {}

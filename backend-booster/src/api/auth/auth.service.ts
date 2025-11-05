@@ -35,23 +35,20 @@ export class AuthService {
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
-    // 2. Verificar se a senha está correta usando Argon2
     const senhaValida = await argon2.verify(user.senha, senha);
 
     if (!senhaValida) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
-    // 3. Gerar o token JWT
     const payload = {
-      sub: user.id_user, // "sub" é o padrão JWT para identificador do usuário
+      sub: user.id_user,
       email: user.email,
       role: user.role,
     };
 
     const accessToken = await this.jwtService.signAsync(payload);
 
-    // 4. Retornar o token e dados do usuário (sem a senha!)
     return {
       access_token: accessToken,
       user: {
@@ -68,7 +65,6 @@ export class AuthService {
    * Sempre cria com role CLIENT
    */
   async register(registerDto: RegisterDto) {
-    // 1. Verificar se o email já existe
     const existingUser = await this.userRepository.findOne({
       where: { email: registerDto.email },
     });
@@ -77,7 +73,6 @@ export class AuthService {
       throw new ConflictException('Email já cadastrado');
     }
 
-    // 2. Verificar se o documento já existe
     const existingDocument = await this.userRepository.findOne({
       where: { documento: registerDto.documento },
     });
@@ -86,20 +81,16 @@ export class AuthService {
       throw new ConflictException('Documento já cadastrado');
     }
 
-    // 3. Hash da senha com Argon2
     const hashedPassword = await argon2.hash(registerDto.senha);
 
-    // 4. Criar o usuário (sempre como CLIENT)
     const user = this.userRepository.create({
       ...registerDto,
       senha: hashedPassword,
-      role: UserRole.CLIENT, // Forçar role como CLIENT
+      role: UserRole.CLIENT,
     });
 
-    // 5. Salvar no banco
     const savedUser = await this.userRepository.save(user);
 
-    // 6. Gerar token JWT automaticamente
     const payload = {
       sub: savedUser.id_user,
       email: savedUser.email,
@@ -108,7 +99,6 @@ export class AuthService {
 
     const accessToken = await this.jwtService.signAsync(payload);
 
-    // 7. Retornar token e dados do usuário (sem senha)
     return {
       access_token: accessToken,
       user: {

@@ -8,26 +8,30 @@ import {
   MinLength,
 } from 'class-validator';
 import { TipoClienteEnum, UserRole } from '@shared/enums/database.enums';
-
+import { ApiProperty } from '@nestjs/swagger';
 /**
  * DTO para criação de usuário (usado por ADMINs)
  * Permite definir a role do usuário
  */
 export class CreateUserDto {
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @Length(3, 100)
   nome: string;
 
+  @ApiProperty()
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @MinLength(6, { message: 'A senha deve ter no mínimo 6 caracteres' })
   senha: string;
 
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @Length(11, 14, {
@@ -35,10 +39,12 @@ export class CreateUserDto {
   })
   documento: string;
 
+  @ApiProperty()
   @IsEnum(TipoClienteEnum)
   @IsNotEmpty()
   tipo_cliente: TipoClienteEnum;
 
+  @ApiProperty()
   @IsEnum(UserRole)
   @IsOptional()
   role?: UserRole;

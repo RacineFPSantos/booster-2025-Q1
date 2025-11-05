@@ -51,7 +51,6 @@ export class UserController {
   @Get('me/profile')
   @UseGuards(JwtAuthGuard)
   async getMyProfile(@CurrentUser() user: any) {
-    // user vem do JWT automaticamente
     return {
       message: 'Perfil do usuário logado',
       user,

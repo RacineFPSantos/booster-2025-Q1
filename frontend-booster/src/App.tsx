@@ -4,6 +4,7 @@ import { Home } from "./pages/Home";
 import { Register } from "./pages/Register";
 import { Pecas } from "./pages/Pecas";
 import { Servicos } from "./pages/Servicos";
+import { Toaster } from "./components/ui/sonner";
 import "./App.css";
 
 // Componente para rotas protegidas
@@ -59,6 +60,7 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <AppRoutes />
+        <Toaster position="top-right" expand={true} richColors closeButton />
       </AuthProvider>
     </BrowserRouter>
   );

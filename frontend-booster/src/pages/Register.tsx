@@ -15,6 +15,7 @@ import {
   formatDocument,
   removeNonNumeric,
 } from "@/lib/validators";
+import { toast } from "sonner";
 
 export function Register() {
   const [formData, setFormData] = useState({
@@ -24,7 +25,6 @@ export function Register() {
     documento: "",
     tipo_cliente: TipoClienteEnum.PF,
   });
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const { register } = useAuth();
@@ -35,7 +35,6 @@ export function Register() {
   ) => {
     const { name, value } = e.target;
 
-    // Se for o campo documento, aplicar formatação
     if (name === "documento") {
       const formatted = formatDocument(value, formData.tipo_cliente);
       setFormData({
@@ -43,7 +42,6 @@ export function Register() {
         [name]: formatted,
       });
     } else if (name === "tipo_cliente") {
-      // Se mudar o tipo de cliente, limpar o documento
       setFormData({
         ...formData,
         tipo_cliente: value as TipoClienteEnum,
@@ -59,15 +57,13 @@ export function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
 
-    // Validar documento antes de enviar
     const documentoLimpo = removeNonNumeric(formData.documento);
 
     if (!validateDocument(documentoLimpo, formData.tipo_cliente)) {
       const tipoDocumento =
         formData.tipo_cliente === TipoClienteEnum.PF ? "CPF" : "CNPJ";
-      setError(
+      toast.error(
         `${tipoDocumento} inválido. Por favor, verifique o número digitado.`,
       );
       return;
@@ -76,13 +72,13 @@ export function Register() {
     setIsLoading(true);
 
     try {
-      // Enviar o documento sem formatação para o backend
       const dataToSend = {
         ...formData,
         documento: documentoLimpo,
       };
 
       await register(dataToSend);
+      toast.success("Conta criada com sucesso! Bem-vindo!");
       navigate("/");
     } catch (err: unknown) {
       let errorMessage = "";
@@ -96,7 +92,7 @@ export function Register() {
         console.error("Um erro desconhecido ocorreu.");
       }
 
-      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -111,12 +107,6 @@ export function Register() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-                {error}
-              </div>
-            )}
-
             <div className="space-y-2">
               <Label htmlFor="nome">Nome</Label>
               <input
