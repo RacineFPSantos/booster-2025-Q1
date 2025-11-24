@@ -1,4 +1,4 @@
-import { Produto } from "@/types/produto.types";
+import { type Produto } from "@/types/produto.types";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Package } from "lucide-react";

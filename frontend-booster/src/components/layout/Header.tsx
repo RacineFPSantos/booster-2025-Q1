@@ -8,7 +8,6 @@ import {
   LogIn,
   User,
   LogOut,
-  Settings,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { LoginModal } from "../auth/LoginModal";

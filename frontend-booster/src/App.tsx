@@ -1,13 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/AuthContext";
 import { Home } from "./pages/Home";
-import { Register } from "./pages/Register";
-import { Pecas } from "./pages/Pecas";
-import { Servicos } from "./pages/Servicos";
+//import { Register } from "./pages/Register";
+//import { Pecas } from "./pages/Pecas";
+//import { Servicos } from "./pages/Servicos";
 import { Toaster } from "./components/ui/sonner";
 import "./App.css";
 
 // Componente para rotas protegidas
+/*
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -35,6 +36,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 
   return !isAuthenticated ? <>{children}</> : <Navigate to="/" />;
 }
+*/
 
 function AppRoutes() {
   return (
