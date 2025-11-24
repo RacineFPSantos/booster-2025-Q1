@@ -40,16 +40,16 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/pecas" element={<Pecas />} />
-      <Route path="/servicos" element={<Servicos />} />
-      <Route
+      {/* <Route path="/pecas" element={<Pecas />} /> */}
+      {/* <Route path="/servicos" element={<Servicos />} /> */}
+      {/* <Route
         path="/register"
         element={
           <PublicRoute>
             <Register />
           </PublicRoute>
         }
-      />
+      /> */}
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

@@ -54,23 +54,23 @@ export function Header() {
                 Início
               </button>
 
-              <button
+              {/* <button
                 onClick={() => navigate("/pecas")}
                 className="text-slate-600 hover:text-blue-600"
               >
                 Peças
-              </button>
+              </button> */}
 
-              <button
+              {/* <button
                 onClick={() => navigate("/servicos")}
                 className="text-slate-600 hover:text-blue-600"
               >
                 Serviços
-              </button>
+              </button> */}
 
-              <a href="#contato" className="text-slate-600 hover:text-blue-600">
+              {/* <a href="#contato" className="text-slate-600 hover:text-blue-600">
                 Contato
-              </a>
+              </a> */}
             </nav>
 
             <div className="flex items-center gap-3">
@@ -111,17 +111,17 @@ export function Header() {
                       </p>
                     </div>
 
-                    <DropdownMenuItem onClick={() => navigate("/profile")}>
+                    {/* <DropdownMenuItem onClick={() => navigate("/profile")}>
                       <User className="h-4 w-4 mr-2" />
                       Meu Perfil
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
 
-                    <DropdownMenuItem onClick={() => navigate("/orders")}>
+                    {/* <DropdownMenuItem onClick={() => navigate("/orders")}>
                       <ShoppingCart className="h-4 w-4 mr-2" />
                       Meus Pedidos
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
 
-                    {user.role === "ADMIN" && (
+                    {/* {user.role === "ADMIN" && (
                       <>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => navigate("/admin")}>
@@ -129,7 +129,7 @@ export function Header() {
                           Painel Admin
                         </DropdownMenuItem>
                       </>
-                    )}
+                    )} */}
 
                     <DropdownMenuSeparator />
 
