@@ -23,8 +23,10 @@ export function Register() {
     email: "",
     senha: "",
     documento: "",
-    tipo_cliente: TipoClienteEnum.PF,
   });
+  const [tipoDocumento, setTipoDocumento] = useState<TipoClienteEnum>(
+    TipoClienteEnum.PF,
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   const { register } = useAuth();
@@ -36,15 +38,15 @@ export function Register() {
     const { name, value } = e.target;
 
     if (name === "documento") {
-      const formatted = formatDocument(value, formData.tipo_cliente);
+      const formatted = formatDocument(value, tipoDocumento);
       setFormData({
         ...formData,
         [name]: formatted,
       });
     } else if (name === "tipo_cliente") {
+      setTipoDocumento(value as TipoClienteEnum);
       setFormData({
         ...formData,
-        tipo_cliente: value as TipoClienteEnum,
         documento: "",
       });
     } else {
@@ -60,11 +62,10 @@ export function Register() {
 
     const documentoLimpo = removeNonNumeric(formData.documento);
 
-    if (!validateDocument(documentoLimpo, formData.tipo_cliente)) {
-      const tipoDocumento =
-        formData.tipo_cliente === TipoClienteEnum.PF ? "CPF" : "CNPJ";
+    if (!validateDocument(documentoLimpo, tipoDocumento)) {
+      const tipoDoc = tipoDocumento === TipoClienteEnum.PF ? "CPF" : "CNPJ";
       toast.error(
-        `${tipoDocumento} inválido. Por favor, verifique o número digitado.`,
+        `${tipoDoc} inválido. Por favor, verifique o número digitado.`,
       );
       return;
     }
@@ -155,7 +156,7 @@ export function Register() {
               <select
                 id="tipo_cliente"
                 name="tipo_cliente"
-                value={formData.tipo_cliente}
+                value={tipoDocumento}
                 onChange={handleChange}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -169,7 +170,7 @@ export function Register() {
 
             <div className="space-y-2">
               <Label htmlFor="documento">
-                {formData.tipo_cliente === TipoClienteEnum.PF ? "CPF" : "CNPJ"}
+                {tipoDocumento === TipoClienteEnum.PF ? "CPF" : "CNPJ"}
               </Label>
               <input
                 id="documento"
@@ -178,12 +179,10 @@ export function Register() {
                 value={formData.documento}
                 onChange={handleChange}
                 required
-                maxLength={
-                  formData.tipo_cliente === TipoClienteEnum.PF ? 14 : 18
-                }
+                maxLength={tipoDocumento === TipoClienteEnum.PF ? 14 : 18}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder={
-                  formData.tipo_cliente === TipoClienteEnum.PF
+                  tipoDocumento === TipoClienteEnum.PF
                     ? "000.000.000-00"
                     : "00.000.000/0000-00"
                 }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
 import { ProdutoCard } from "@/components/cards/ProdutoCard";
 import { ProdutoService } from "@/services/produtoService";
 import type { Produto, Categoria, Fabricante } from "@/types/produto.types";
@@ -13,6 +14,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 export function Pecas() {
   const [searchParams] = useSearchParams();
+  const { addProduto } = useCart();
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [produtosFiltrados, setProdutosFiltrados] = useState<Produto[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -116,8 +118,7 @@ export function Pecas() {
   };
 
   const handleAddToCart = (produto: Produto) => {
-    toast.success(`${produto.nome} adicionado ao carrinho!`);
-    // TODO: Implementar lógica de carrinho
+    addProduto(produto, 1);
   };
 
   if (isLoading) {

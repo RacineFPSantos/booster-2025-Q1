@@ -30,7 +30,6 @@ export interface RegisterRequest {
   email: string;
   senha: string;
   documento: string;
-  tipo_cliente: TipoClienteEnum;
 }
 
 export interface AuthResponse {

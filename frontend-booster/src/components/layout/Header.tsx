@@ -12,6 +12,7 @@ import {
 import { Button } from "../ui/button";
 import { LoginModal } from "../auth/LoginModal";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +24,7 @@ import {
 export function Header() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
+  const { cart } = useCart();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -53,12 +55,12 @@ export function Header() {
                 Início
               </button>
 
-              {/* <button
+              <button
                 onClick={() => navigate("/pecas")}
                 className="text-slate-600 hover:text-blue-600"
               >
                 Peças
-              </button> */}
+              </button>
 
               {/* <button
                 onClick={() => navigate("/servicos")}
@@ -67,9 +69,9 @@ export function Header() {
                 Serviços
               </button> */}
 
-              {/* <a href="#contato" className="text-slate-600 hover:text-blue-600">
+              <a href="#contato" className="text-slate-600 hover:text-blue-600">
                 Contato
-              </a> */}
+              </a>
             </nav>
 
             <div className="flex items-center gap-3">
@@ -77,8 +79,18 @@ export function Header() {
                 <Search className="h-5 w-5" />
               </Button>
 
-              <Button variant="ghost" size="icon">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative"
+                onClick={() => navigate("/cart")}
+              >
                 <ShoppingCart className="h-5 w-5" />
+                {cart.totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    {cart.totalItems}
+                  </span>
+                )}
               </Button>
 
               {/* Mostrar botão de login OU menu do usuário */}
