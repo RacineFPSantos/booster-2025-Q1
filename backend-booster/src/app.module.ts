@@ -9,6 +9,7 @@ import { ProdutoModule } from './api/catalog/produto/produto.module';
 import { CartModule } from './api/cart/cart.module';
 import { PedidoModule } from './api/pedido/pedido.module';
 import { EnumValidatorService } from './core/validators/enum-validator.service';
+import { HealthController } from './health/health.controller';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { EnumValidatorService } from './core/validators/enum-validator.service';
     CartModule,
     PedidoModule,
   ],
-  controllers: [],
+  controllers: [HealthController],
   providers: [EnumValidatorService],
 })
 export class AppModule {}

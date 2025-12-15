@@ -59,9 +59,13 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(process.env.PORT ?? 3000);
-  console.log(
-    `🚀 Backend rodando em http://localhost:${process.env.PORT ?? 3000}`,
-  );
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port);
+  console.log(`🚀 Backend rodando na porta ${port}`);
+  console.log(`📊 Environment: ${process.env.NODE_ENV ?? 'development'}`);
 }
-bootstrap();
+
+bootstrap().catch((error) => {
+  console.error('❌ Erro fatal ao iniciar aplicação:', error);
+  process.exit(1);
+});
