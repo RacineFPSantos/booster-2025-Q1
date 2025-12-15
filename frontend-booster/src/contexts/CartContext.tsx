@@ -36,8 +36,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [isAuthenticated]);
 
-  // Calcular subtotais dos itens
-  const addSubtotals = (items: CartItem[]): CartItem[] => {
+  // Calcular subtotais dos itens (converte CartItemResponse para CartItem)
+  const addSubtotals = (items: any[]): CartItem[] => {
     return items.map((item) => ({
       ...item,
       subtotal: Number(item.preco_unitario) * item.quantidade,
