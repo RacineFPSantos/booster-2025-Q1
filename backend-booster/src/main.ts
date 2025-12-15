@@ -18,9 +18,28 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   // Habilitar CORS
+  const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    'http://localhost:5173', // Desenvolvimento local
+    'https://booster2025-aicar.web.app', // Firebase Hosting
+    'https://booster2025-aicar.firebaseapp.com', // Firebase Hosting alternativo
+  ].filter(Boolean); // Remove valores undefined/null
+
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      // Permite requisições sem origin (Postman, mobile apps, etc)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn(`🚫 Origem bloqueada por CORS: ${origin}`);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
   app.useGlobalPipes(
