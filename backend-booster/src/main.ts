@@ -25,21 +25,30 @@ async function bootstrap() {
     'https://booster2025-aicar.firebaseapp.com', // Firebase Hosting alternativo
   ].filter(Boolean); // Remove valores undefined/null
 
+  console.log('🌐 CORS - Allowed Origins:', allowedOrigins);
+
   app.enableCors({
     origin: (origin, callback) => {
       // Permite requisições sem origin (Postman, mobile apps, etc)
-      if (!origin) return callback(null, true);
+      if (!origin) {
+        console.log('✅ CORS - Permitindo requisição sem origin');
+        return callback(null, true);
+      }
 
       if (allowedOrigins.includes(origin)) {
+        console.log(`✅ CORS - Permitindo origin: ${origin}`);
         callback(null, true);
       } else {
-        console.warn(`🚫 Origem bloqueada por CORS: ${origin}`);
-        callback(new Error('Not allowed by CORS'));
+        console.warn(`🚫 CORS - Origem bloqueada: ${origin}`);
+        // Retorna false em vez de erro para não quebrar a requisição
+        callback(null, false);
       }
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   });
 
   app.useGlobalPipes(
