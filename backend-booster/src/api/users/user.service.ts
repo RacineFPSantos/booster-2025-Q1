@@ -36,13 +36,13 @@ export class UserService {
 
     const user = this.usersRepository.create({
       ...createUserDto,
-      senha: hashedPassword,
-      role: createUserDto.role || UserRole.CLIENT, // Default: CLIENT
+      password_hash: hashedPassword,
+      usuario_role: createUserDto.role || UserRole.CLIENT, // Default: CLIENT
     });
 
     const savedUser = await this.entityManager.save(user);
 
-    const { senha, ...userWithoutPassword } = savedUser;
+    const { password_hash, ...userWithoutPassword } = savedUser;
     return userWithoutPassword;
   }
 
@@ -51,14 +51,14 @@ export class UserService {
   }
 
   async findOne(id: number) {
-    return this.usersRepository.findOneBy({ id_user: id });
+    return this.usersRepository.findOneBy({ id_usuario: id });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    return await this.usersRepository.update({ id_user: id }, updateUserDto);
+    return await this.usersRepository.update({ id_usuario: id }, updateUserDto);
   }
 
   async remove(id: number) {
-    await this.usersRepository.delete({ id_user: id });
+    await this.usersRepository.delete({ id_usuario: id });
   }
 }

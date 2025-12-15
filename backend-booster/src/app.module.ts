@@ -6,6 +6,8 @@ import { UserModule } from './api/users/user.module';
 import { CategoriaModule } from './api/catalog/categoria/categoria.module';
 import { FabricanteModule } from './api/catalog/fabricante/fabricante.module';
 import { ProdutoModule } from './api/catalog/produto/produto.module';
+import { CartModule } from './api/cart/cart.module';
+import { PedidoModule } from './api/pedido/pedido.module';
 import { EnumValidatorService } from './core/validators/enum-validator.service';
 
 @Module({
@@ -17,6 +19,8 @@ import { EnumValidatorService } from './core/validators/enum-validator.service';
     CategoriaModule,
     FabricanteModule,
     ProdutoModule,
+    CartModule,
+    PedidoModule,
   ],
   controllers: [],
   providers: [EnumValidatorService],

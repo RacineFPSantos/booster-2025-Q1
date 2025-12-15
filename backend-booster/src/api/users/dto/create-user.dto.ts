@@ -7,7 +7,7 @@ import {
   Length,
   MinLength,
 } from 'class-validator';
-import { TipoClienteEnum, UserRole } from '@shared/enums/database.enums';
+import { UserRole } from '@shared/enums/database.enums';
 import { ApiProperty } from '@nestjs/swagger';
 /**
  * DTO para criação de usuário (usado por ADMINs)
@@ -38,11 +38,6 @@ export class CreateUserDto {
     message: 'Documento deve ter entre 11 (CPF) e 14 (CNPJ) caracteres',
   })
   documento: string;
-
-  @ApiProperty()
-  @IsEnum(TipoClienteEnum)
-  @IsNotEmpty()
-  tipo_cliente: TipoClienteEnum;
 
   @ApiProperty()
   @IsEnum(UserRole)

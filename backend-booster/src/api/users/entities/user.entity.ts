@@ -2,38 +2,48 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { TipoClienteEnum } from '@shared/enums/database.enums';
 import { UserRole } from '@shared/enums/database.enums';
 
-@Entity('user')
+@Entity('usuario')
 export class User {
-  @PrimaryGeneratedColumn()
-  id_user: number;
+  @PrimaryGeneratedColumn({ name: 'id_usuario' })
+  id_usuario: number;
 
-  @Column({ type: 'varchar', length: 14, unique: true, nullable: false })
+  @Column({ type: 'varchar', unique: true, nullable: false })
   documento: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: false })
+  @Column({ type: 'varchar', unique: true, nullable: false })
   email: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: false })
-  senha: string;
+  @Column({ name: 'password_hash', type: 'varchar', nullable: false })
+  password_hash: string;
+
+  @Column({ type: 'varchar', nullable: false })
+  nome: string;
 
   @Column({
+    name: 'tipo_usuario',
     type: 'enum',
     enum: UserRole,
-    enumName: 'user_role_enum',
+    enumName: 'tipo_usuario_enum',
     default: UserRole.CLIENT,
   })
-  role: UserRole;
+  tipo_usuario: UserRole;
 
   @Column({
+    name: 'usuario_role',
     type: 'enum',
-    enum: TipoClienteEnum,
-    enumName: 'tipo_cliente_enum',
-    nullable: false,
+    enum: UserRole,
+    enumName: 'usuario_role_enum',
+    default: UserRole.CLIENT,
   })
-  tipo_cliente: TipoClienteEnum;
+  usuario_role: UserRole;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  nome: string;
+  @Column({
+    name: 'is_active',
+    type: 'boolean',
+    nullable: false,
+    default: true,
+  })
+  is_active: boolean;
 
   @Column({
     type: 'timestamp without time zone',

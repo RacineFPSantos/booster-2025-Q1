@@ -35,16 +35,16 @@ export class AuthService {
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
-    const senhaValida = await argon2.verify(user.senha, senha);
+    const senhaValida = await argon2.verify(user.password_hash, senha);
 
     if (!senhaValida) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
     const payload = {
-      sub: user.id_user,
+      sub: user.id_usuario,
       email: user.email,
-      role: user.role,
+      role: user.usuario_role,
     };
 
     const accessToken = await this.jwtService.signAsync(payload);
@@ -52,9 +52,9 @@ export class AuthService {
     return {
       access_token: accessToken,
       user: {
-        id: user.id_user,
+        id: user.id_usuario,
         email: user.email,
-        role: user.role,
+        role: user.usuario_role,
         nome: user.nome,
       },
     };
@@ -85,16 +85,16 @@ export class AuthService {
 
     const user = this.userRepository.create({
       ...registerDto,
-      senha: hashedPassword,
-      role: UserRole.CLIENT,
+      password_hash: hashedPassword,
+      usuario_role: UserRole.CLIENT,
     });
 
     const savedUser = await this.userRepository.save(user);
 
     const payload = {
-      sub: savedUser.id_user,
+      sub: savedUser.id_usuario,
       email: savedUser.email,
-      role: savedUser.role,
+      role: savedUser.usuario_role,
     };
 
     const accessToken = await this.jwtService.signAsync(payload);
@@ -102,11 +102,11 @@ export class AuthService {
     return {
       access_token: accessToken,
       user: {
-        id: savedUser.id_user,
+        id: savedUser.id_usuario,
         email: savedUser.email,
-        role: savedUser.role,
+        role: savedUser.usuario_role,
         nome: savedUser.nome,
-        tipo_cliente: savedUser.tipo_cliente,
+        tipo_usuario: savedUser.tipo_usuario,
       },
     };
   }

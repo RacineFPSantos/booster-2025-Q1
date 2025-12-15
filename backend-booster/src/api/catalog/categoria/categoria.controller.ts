@@ -15,31 +15,31 @@ import { UpdateCategoriaDto } from './dto/update-categoria.dto';
 export class CategoriaController {
   constructor(private readonly categoriaService: CategoriaService) {}
 
-  // @Post()
-  // create(@Body() createCategoriaDto: CreateCategoriaDto) {
-  //   return this.categoriaService.create(createCategoriaDto);
-  // }
+  @Post()
+  create(@Body() createCategoriaDto: CreateCategoriaDto) {
+    return this.categoriaService.create(createCategoriaDto);
+  }
 
-  // @Get()
-  // findAll() {
-  //   return this.categoriaService.findAll();
-  // }
+  @Get()
+  findAll() {
+    return this.categoriaService.findAll();
+  }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.categoriaService.findOne(+id);
-  // }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.categoriaService.findOne(+id);
+  }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateCategoriaDto: UpdateCategoriaDto,
-  // ) {
-  //   return this.categoriaService.update(+id, updateCategoriaDto);
-  // }
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateCategoriaDto: UpdateCategoriaDto,
+  ) {
+    return this.categoriaService.update(+id, updateCategoriaDto);
+  }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.categoriaService.remove(+id);
-  // }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.categoriaService.remove(+id);
+  }
 }

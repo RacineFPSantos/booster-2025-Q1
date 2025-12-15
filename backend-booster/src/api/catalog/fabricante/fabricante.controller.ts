@@ -15,31 +15,31 @@ import { UpdateFabricanteDto } from './dto/update-fabricante.dto';
 export class FabricanteController {
   constructor(private readonly fabricanteService: FabricanteService) {}
 
-  // @Post()
-  // create(@Body() createFabricanteDto: CreateFabricanteDto) {
-  //   return this.fabricanteService.create(createFabricanteDto);
-  // }
+  @Post()
+  create(@Body() createFabricanteDto: CreateFabricanteDto) {
+    return this.fabricanteService.create(createFabricanteDto);
+  }
 
-  // @Get()
-  // findAll() {
-  //   return this.fabricanteService.findAll();
-  // }
+  @Get()
+  findAll() {
+    return this.fabricanteService.findAll();
+  }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.fabricanteService.findOne(+id);
-  // }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.fabricanteService.findOne(+id);
+  }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateFabricanteDto: UpdateFabricanteDto,
-  // ) {
-  //   return this.fabricanteService.update(+id, updateFabricanteDto);
-  // }
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateFabricanteDto: UpdateFabricanteDto,
+  ) {
+    return this.fabricanteService.update(+id, updateFabricanteDto);
+  }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.fabricanteService.remove(+id);
-  // }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.fabricanteService.remove(+id);
+  }
 }
