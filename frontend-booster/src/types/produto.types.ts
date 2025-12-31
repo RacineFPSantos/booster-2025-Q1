@@ -23,10 +23,14 @@ export interface Produto {
   nome: string;
   descricao: string;
   preco_unitario: number;
+  preco: number; // Alias para preco_unitario
   id_categoria: number;
   id_fabricante: number;
   categoria?: Categoria;
   fabricante?: Fabricante;
+  estoque?: {
+    quantidade: number;
+  };
   created_at: Date;
   updated_at: Date;
 }

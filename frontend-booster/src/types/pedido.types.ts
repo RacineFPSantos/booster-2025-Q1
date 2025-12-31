@@ -22,13 +22,17 @@ export interface PedidoItem {
 export interface Pedido {
   id_pedido: number;
   id_cliente: number;
-  data_hora: Date;
+  data_hora: Date | string;
   valor_total: number;
   status: StatusPedidoEnum;
   id_usuario: number;
-  created_at?: Date;
-  updated_at?: Date;
+  created_at?: Date | string;
+  updated_at?: Date | string;
   items?: PedidoItem[];
+  cliente?: {
+    nome?: string;
+    email?: string;
+  };
 }
 
 export interface CreatePedidoDto {

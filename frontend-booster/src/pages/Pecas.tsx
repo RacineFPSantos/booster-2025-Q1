@@ -32,8 +32,15 @@ export function Pecas() {
     aplicarFiltros();
   }, [busca, categoriaFiltro, fabricanteFiltro, produtos]);
 
-  // Aplicar filtro de categoria da URL quando os dados são carregados
+  // Aplicar filtros da URL quando os dados são carregados
   useEffect(() => {
+    // Aplicar busca da URL
+    const searchQuery = searchParams.get("search");
+    if (searchQuery) {
+      setBusca(searchQuery);
+    }
+
+    // Aplicar filtro de categoria da URL
     if (categorias.length > 0) {
       const categoriaNome = searchParams.get("categoria");
       if (categoriaNome) {

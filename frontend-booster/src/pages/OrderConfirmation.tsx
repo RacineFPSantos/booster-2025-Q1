@@ -6,13 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PedidoService } from "@/services/pedidoService";
 import type { Pedido } from "@/types/pedido.types";
-import {
-  CheckCircle,
-  Package,
-  Loader2,
-  Home,
-  ShoppingBag,
-} from "lucide-react";
+import { CheckCircle, Package, Loader2, Home, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 
 export function OrderConfirmation() {
@@ -48,7 +42,7 @@ export function OrderConfirmation() {
     }).format(price);
   };
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date | string) => {
     return new Intl.DateTimeFormat("pt-BR", {
       day: "2-digit",
       month: "long",
@@ -162,7 +156,7 @@ export function OrderConfirmation() {
                               </span>
                               <span className="font-medium text-slate-900">
                                 {formatPrice(
-                                  item.preco_unitario * item.quantidade
+                                  item.preco_unitario * item.quantidade,
                                 )}
                               </span>
                             </div>

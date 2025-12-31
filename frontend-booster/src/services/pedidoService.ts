@@ -60,4 +60,34 @@ export class PedidoService {
       throw new Error(errorMessage);
     }
   }
+
+  /**
+   * Busca todos os pedidos (apenas ADMIN)
+   */
+  static async findAll(): Promise<Pedido[]> {
+    try {
+      const response = await api.get<Pedido[]>("/pedidos/admin/all");
+      return response.data;
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message || "Erro ao buscar todos os pedidos";
+      throw new Error(errorMessage);
+    }
+  }
+
+  /**
+   * Atualiza o status de um pedido (apenas ADMIN)
+   */
+  static async updateStatus(id: number, status: string): Promise<Pedido> {
+    try {
+      const response = await api.patch<Pedido>(`/pedidos/${id}/status`, {
+        status,
+      });
+      return response.data;
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message || "Erro ao atualizar status do pedido";
+      throw new Error(errorMessage);
+    }
+  }
 }

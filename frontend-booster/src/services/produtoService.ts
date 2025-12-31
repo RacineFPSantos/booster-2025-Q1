@@ -1,11 +1,11 @@
-import { api } from '@/lib/axios';
+import { api } from "@/lib/axios";
 import type {
   Produto,
   CreateProdutoDto,
   UpdateProdutoDto,
   Categoria,
   Fabricante,
-} from '@/types/produto.types';
+} from "@/types/produto.types";
 
 /**
  * Serviço de Produtos/Peças
@@ -16,7 +16,7 @@ export class ProdutoService {
    * Busca todos os produtos
    */
   static async findAll(): Promise<Produto[]> {
-    const response = await api.get<Produto[]>('/produto');
+    const response = await api.get<Produto[]>("/produto");
     return response.data;
   }
 
@@ -32,7 +32,7 @@ export class ProdutoService {
    * Cria um novo produto
    */
   static async create(data: CreateProdutoDto): Promise<Produto> {
-    const response = await api.post<Produto>('/produto', data);
+    const response = await api.post<Produto>("/produto", data);
     return response.data;
   }
 
@@ -52,10 +52,17 @@ export class ProdutoService {
   }
 
   /**
+   * Deleta um produto (alias para remove)
+   */
+  static async delete(id: number): Promise<void> {
+    await this.remove(id);
+  }
+
+  /**
    * Busca todas as categorias
    */
   static async findAllCategorias(): Promise<Categoria[]> {
-    const response = await api.get<Categoria[]>('/categoria');
+    const response = await api.get<Categoria[]>("/categoria");
     return response.data;
   }
 
@@ -63,7 +70,7 @@ export class ProdutoService {
    * Busca todos os fabricantes
    */
   static async findAllFabricantes(): Promise<Fabricante[]> {
-    const response = await api.get<Fabricante[]>('/fabricante');
+    const response = await api.get<Fabricante[]>("/fabricante");
     return response.data;
   }
 }

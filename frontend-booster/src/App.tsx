@@ -5,16 +5,21 @@ import { Home } from "./pages/Home";
 import { Register } from "./pages/Register";
 import { Pecas } from "./pages/Pecas";
 import { Cart } from "./pages/Cart";
+import { Orders } from "./pages/Orders";
+import { OrderDetails } from "./pages/OrderDetails";
 import { Checkout } from "./pages/Checkout";
 import { OrderConfirmation } from "./pages/OrderConfirmation";
-//import { Servicos } from "./pages/Servicos";
+import { AdminDashboard } from "./pages/admin/AdminDashboard";
+import { AdminProdutos } from "./pages/admin/AdminProdutos";
+import { AdminPedidos } from "./pages/admin/AdminPedidos";
+import { AdminUsuarios } from "./pages/admin/AdminUsuarios";
+import { AdminConfiguracoes } from "./pages/admin/AdminConfiguracoes";
 import { Toaster } from "./components/ui/sonner";
 import "./App.css";
 
-// Componente para rotas protegidas
-/*
-function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuth();
+// Componente para rotas protegidas de admin
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { user, isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -24,9 +29,16 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
+  if (!isAuthenticated) {
+    return <Navigate to="/" />;
+  }
+
+  if (user?.role !== "ADMIN") {
+    return <Navigate to="/" />;
+  }
+
+  return <>{children}</>;
 }
-*/
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -53,7 +65,51 @@ function AppRoutes() {
         path="/order-confirmation/:orderId"
         element={<OrderConfirmation />}
       />
-      {/* <Route path="/servicos" element={<Servicos />} /> */}
+      <Route path="/orders" element={<Orders />} />
+      <Route path="/orders/:orderId" element={<OrderDetails />} />
+
+      {/* Rotas de Admin */}
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/produtos"
+        element={
+          <AdminRoute>
+            <AdminProdutos />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/pedidos"
+        element={
+          <AdminRoute>
+            <AdminPedidos />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/usuarios"
+        element={
+          <AdminRoute>
+            <AdminUsuarios />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/configuracoes"
+        element={
+          <AdminRoute>
+            <AdminConfiguracoes />
+          </AdminRoute>
+        }
+      />
+
       <Route
         path="/register"
         element={

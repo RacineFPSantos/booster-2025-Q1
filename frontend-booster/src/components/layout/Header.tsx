@@ -8,6 +8,8 @@ import {
   LogIn,
   User,
   LogOut,
+  Package,
+  Settings,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { LoginModal } from "../auth/LoginModal";
@@ -127,12 +129,12 @@ export function Header() {
                       Meu Perfil
                     </DropdownMenuItem> */}
 
-                    {/* <DropdownMenuItem onClick={() => navigate("/orders")}>
-                      <ShoppingCart className="h-4 w-4 mr-2" />
+                    <DropdownMenuItem onClick={() => navigate("/orders")}>
+                      <Package className="h-4 w-4 mr-2" />
                       Meus Pedidos
-                    </DropdownMenuItem> */}
+                    </DropdownMenuItem>
 
-                    {/* {user.role === "ADMIN" && (
+                    {user.role === "ADMIN" && (
                       <>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => navigate("/admin")}>
@@ -140,7 +142,7 @@ export function Header() {
                           Painel Admin
                         </DropdownMenuItem>
                       </>
-                    )} */}
+                    )}
 
                     <DropdownMenuSeparator />
 

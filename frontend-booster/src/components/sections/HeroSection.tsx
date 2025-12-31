@@ -2,13 +2,30 @@ import { Search } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { StatsSection } from "./StatsSection";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function HeroSection() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+
   const stats = [
     { value: "15k+", label: "Peças" },
     { value: "8k+", label: "Clientes" },
     { value: "99%", label: "Satisfação" },
   ];
+
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      navigate(`/pecas?search=${encodeURIComponent(searchTerm)}`);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
 
   return (
     <section className="bg-gradient-to-b from-slate-50 to-white py-20 md:py-12">
@@ -33,9 +50,12 @@ export function HeroSection() {
               <Input
                 placeholder="Buscar peças, serviços ou categoria..."
                 className="pl-10 h-12 text-base"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyPress={handleKeyPress}
               />
             </div>
-            <Button size="lg" className="h-12 px-8">
+            <Button size="lg" className="h-12 px-8" onClick={handleSearch}>
               Buscar
             </Button>
           </div>
