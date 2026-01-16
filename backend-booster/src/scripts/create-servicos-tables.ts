@@ -41,7 +41,6 @@ async function createServicosTables() {
         id_usuario INT,
         data_agendamento DATE NOT NULL,
         hora_agendamento TIME NOT NULL,
-        nome_cliente VARCHAR(200) NOT NULL,
         telefone VARCHAR(20) NOT NULL,
         veiculo VARCHAR(200) NOT NULL,
         observacoes TEXT,

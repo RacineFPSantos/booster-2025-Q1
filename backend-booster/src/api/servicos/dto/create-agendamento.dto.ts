@@ -15,10 +15,6 @@ export class CreateAgendamentoDto {
 
   @IsString()
   @IsNotEmpty()
-  nome_cliente: string;
-
-  @IsString()
-  @IsNotEmpty()
   telefone: string;
 
   @IsString()

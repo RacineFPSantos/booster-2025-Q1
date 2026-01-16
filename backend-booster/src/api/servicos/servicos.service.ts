@@ -65,7 +65,6 @@ export class ServicosService {
       id_usuario: userId || null,
       data_agendamento: new Date(dto.data_agendamento),
       hora_agendamento: dto.hora_agendamento,
-      nome_cliente: dto.nome_cliente,
       telefone: dto.telefone,
       veiculo: dto.veiculo,
       observacoes: dto.observacoes,

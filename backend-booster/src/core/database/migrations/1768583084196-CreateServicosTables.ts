@@ -156,12 +156,6 @@ export class CreateServicosTables1768583084196 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'nome_cliente',
-            type: 'varchar',
-            length: '200',
-            isNullable: false,
-          },
-          {
             name: 'telefone',
             type: 'varchar',
             length: '20',

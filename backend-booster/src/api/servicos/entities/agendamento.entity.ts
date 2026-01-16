@@ -42,9 +42,6 @@ export class Agendamento {
   @Column({ type: 'time', nullable: false })
   hora_agendamento: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: false })
-  nome_cliente: string;
-
   @Column({ type: 'varchar', length: 20, nullable: false })
   telefone: string;
 
