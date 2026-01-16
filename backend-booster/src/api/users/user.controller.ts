@@ -19,41 +19,62 @@ import { UserRole } from '@shared/enums/database.enums';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // @Post()
-  // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles(UserRole.ADMIN)
-  // async create(@Body() createUserDto: CreateUserDto) {
-  //   return await this.userService.create(createUserDto);
-  // }
+  @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.userService.create(createUserDto);
+  }
 
-  // @Get()
-  // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles(UserRole.ADMIN)
-  // async findAll() {
-  //   return await this.userService.findAll();
-  // }
+  @Get('stats')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async getStats() {
+    return await this.userService.getStats();
+  }
 
-  // @Get(':id')
-  // async findOne(@Param('id') id: string) {
-  //   return await this.userService.findOne(+id);
-  // }
+  @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async findAll() {
+    return await this.userService.findAll();
+  }
 
-  // @Patch(':id')
-  // async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return await this.userService.update(+id, updateUserDto);
-  // }
+  @Get(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async findOne(@Param('id') id: string) {
+    return await this.userService.findOne(+id);
+  }
 
-  // @Delete(':id')
-  // async remove(@Param('id') id: string) {
-  //   return await this.userService.remove(+id);
-  // }
+  @Patch(':id/role')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async updateRole(@Param('id') id: string, @Body() body: { role: UserRole }) {
+    return await this.userService.updateRole(+id, body.role);
+  }
 
-  // @Get('me/profile')
-  // @UseGuards(JwtAuthGuard)
-  // async getMyProfile(@CurrentUser() user: any) {
-  //   return {
-  //     message: 'Perfil do usuário logado',
-  //     user,
-  //   };
-  // }
+  @Patch(':id/status')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async updateStatus(
+    @Param('id') id: string,
+    @Body() body: { is_active: boolean },
+  ) {
+    return await this.userService.updateStatus(+id, body.is_active);
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return await this.userService.update(+id, updateUserDto);
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async remove(@Param('id') id: string) {
+    return await this.userService.remove(+id);
+  }
 }

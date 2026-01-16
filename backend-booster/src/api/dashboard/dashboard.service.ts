@@ -96,7 +96,7 @@ export class DashboardService {
     return this.pedidoRepository.find({
       take: 10,
       order: { created_at: 'DESC' },
-      relations: ['cliente'],
+      relations: ['usuario'],
     });
   }
 

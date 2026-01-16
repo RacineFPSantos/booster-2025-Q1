@@ -47,11 +47,23 @@ export class UserService {
   }
 
   async findAll() {
-    return this.usersRepository.find();
+    const users = await this.usersRepository.find({
+      order: { created_at: 'DESC' },
+    });
+
+    // Remove password_hash from all users
+    return users.map((user) => {
+      const { password_hash, ...userWithoutPassword } = user;
+      return userWithoutPassword;
+    });
   }
 
   async findOne(id: number) {
-    return this.usersRepository.findOneBy({ id_usuario: id });
+    const user = await this.usersRepository.findOneBy({ id_usuario: id });
+    if (!user) return null;
+
+    const { password_hash, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
@@ -59,6 +71,57 @@ export class UserService {
   }
 
   async remove(id: number) {
-    await this.usersRepository.delete({ id_usuario: id });
+    // Soft delete: desativa ao invés de deletar
+    await this.usersRepository.update({ id_usuario: id }, { is_active: false });
+  }
+
+  async updateRole(id: number, role: UserRole) {
+    await this.usersRepository.update(
+      { id_usuario: id },
+      { usuario_role: role, tipo_usuario: role },
+    );
+
+    return this.findOne(id);
+  }
+
+  async updateStatus(id: number, isActive: boolean) {
+    await this.usersRepository.update(
+      { id_usuario: id },
+      { is_active: isActive },
+    );
+
+    return this.findOne(id);
+  }
+
+  async getStats() {
+    const now = new Date();
+    const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const total = await this.usersRepository.count();
+    const clientes = await this.usersRepository.count({
+      where: { usuario_role: UserRole.CLIENT },
+    });
+    const admins = await this.usersRepository.count({
+      where: { usuario_role: UserRole.ADMIN },
+    });
+    const ativos = await this.usersRepository.count({
+      where: { is_active: true },
+    });
+    const inativos = await this.usersRepository.count({
+      where: { is_active: false },
+    });
+    const novosEsteMes = await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.created_at >= :thisMonth', { thisMonth })
+      .getCount();
+
+    return {
+      total,
+      clientes,
+      admins,
+      ativos,
+      inativos,
+      novosEsteMes,
+    };
   }
 }

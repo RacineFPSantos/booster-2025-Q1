@@ -55,7 +55,7 @@ export class PedidoService {
   async findAll(): Promise<Pedido[]> {
     return this.pedidoRepository.find({
       order: { created_at: 'DESC' },
-      relations: ['cliente'],
+      relations: ['usuario'],
     });
   }
 

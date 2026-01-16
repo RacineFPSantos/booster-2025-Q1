@@ -9,6 +9,8 @@ import { ProdutoModule } from './api/catalog/produto/produto.module';
 import { CartModule } from './api/cart/cart.module';
 import { PedidoModule } from './api/pedido/pedido.module';
 import { DashboardModule } from './api/dashboard/dashboard.module';
+import { ChatModule } from './api/chat/chat.module';
+import { ServicosModule } from './api/servicos/servicos.module';
 import { EnumValidatorService } from './core/validators/enum-validator.service';
 import { HealthController } from './health/health.controller';
 
@@ -24,6 +26,8 @@ import { HealthController } from './health/health.controller';
     CartModule,
     PedidoModule,
     DashboardModule,
+    ChatModule,
+    ServicosModule,
   ],
   controllers: [HealthController],
   providers: [EnumValidatorService],

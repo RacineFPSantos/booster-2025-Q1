@@ -36,7 +36,7 @@ async function bootstrap() {
       }
 
       if (allowedOrigins.includes(origin)) {
-        console.log(`✅ CORS - Permitindo origin: ${origin}`);
+        //console.log(`✅ CORS - Permitindo origin: ${origin}`);
         callback(null, true);
       } else {
         console.warn(`🚫 CORS - Origem bloqueada: ${origin}`);
