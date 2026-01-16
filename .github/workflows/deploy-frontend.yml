@@ -7,7 +7,7 @@ on:
     paths:
       - "frontend-booster/**"
       - ".github/workflows/deploy-frontend.yml"
-  workflow_dispatch: # Permite executar manualmente
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -30,6 +30,11 @@ jobs:
 
       - name: Build
         working-directory: ./frontend-booster
+        # A MUDANÇA É AQUI: Definimos as variáveis para o processo de Build
+        env:
+          VITE_API_URL: https://backend-booster-1012930723332.southamerica-east1.run.app
+          VITE_SUPABASE_URL: https://kwefarwjthmxffmoymty.supabase.co
+          VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt3ZWZhcndqdGhteGZmbW95bXR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE3Mzk3ODEsImV4cCI6MjA3NzMxNTc4MX0.jjm-a_1Bz2QWKUZwufJpaDe14MnPqWiDzW_ioAhBjTo
         run: npm run build
 
       - name: Deploy to Firebase Hosting
