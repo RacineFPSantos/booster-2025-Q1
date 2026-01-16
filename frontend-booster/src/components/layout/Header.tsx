@@ -9,7 +9,6 @@ import {
   User,
   LogOut,
   Package,
-  Settings,
   Shield,
 } from "lucide-react";
 import { Button } from "../ui/button";

@@ -16,7 +16,8 @@ interface DropdownMenuContentProps {
 
 interface DropdownMenuItemProps {
   children: React.ReactNode;
-  onClick?: () => void;
+  onClick?: () => void | Promise<void>; // Adicionado suporte a Promise também
+  className?: string; // Propriedade adicionada
 }
 
 const DropdownMenuContext = React.createContext<{
@@ -87,21 +88,25 @@ export function DropdownMenuContent({
   );
 }
 
-export function DropdownMenuItem({ children, onClick }: DropdownMenuItemProps) {
+export function DropdownMenuItem({
+  children,
+  onClick,
+  className,
+}: DropdownMenuItemProps) {
   const { setIsOpen } = React.useContext(DropdownMenuContext);
 
-  const handleClick = () => {
-    onClick?.();
+  const handleClick = async () => {
+    await onClick?.();
     setIsOpen(false);
   };
 
   return (
     <button
-      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+      className={`w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 ${className || ""}`}
       role="menuitem"
       onClick={handleClick}
     >
-      {children}
+      <div className="flex items-center">{children}</div>
     </button>
   );
 }

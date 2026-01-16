@@ -8,7 +8,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { User, UserRole } from "@/types/user.types";
+import type { User } from "@/types/user.types";
+import { UserRole } from "@/types/user.types";
 
 interface UsuarioModalProps {
   open: boolean;
@@ -47,7 +48,7 @@ export function UsuarioModal({
         email: "",
         documento: "",
         senha: "",
-        role: "CLIENT",
+        role: UserRole.CLIENT,
       });
     }
   }, [usuario, open]);
