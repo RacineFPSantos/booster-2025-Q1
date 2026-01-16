@@ -50,7 +50,7 @@ export function AdminPedidos() {
       resultado = resultado.filter(
         (p) =>
           p.id_pedido.toString().includes(buscaLower) ||
-          p.cliente?.nome?.toLowerCase().includes(buscaLower),
+          p.usuario?.nome?.toLowerCase().includes(buscaLower),
       );
     }
 

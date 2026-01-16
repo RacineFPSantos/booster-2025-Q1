@@ -13,7 +13,6 @@ import {
   Search,
   Edit,
   Loader2,
-  Shield,
   ShieldCheck,
   UserCheck,
   UserX,
