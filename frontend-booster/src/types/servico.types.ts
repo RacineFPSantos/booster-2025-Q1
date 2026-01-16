@@ -32,7 +32,6 @@ export interface Agendamento {
   id_usuario?: number;
   data_agendamento: Date | string;
   hora_agendamento: string;
-  nome_cliente: string;
   telefone: string;
   veiculo: string;
   observacoes?: string;
@@ -50,7 +49,6 @@ export interface CreateAgendamentoDto {
   id_servico: number;
   data_agendamento: string;
   hora_agendamento: string;
-  nome_cliente: string;
   telefone: string;
   veiculo: string;
   observacoes?: string;

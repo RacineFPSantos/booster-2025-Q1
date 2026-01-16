@@ -23,7 +23,6 @@ export interface AgendamentoData {
   id_servico: number;
   data_agendamento: string;
   hora_agendamento: string;
-  nome_cliente: string;
   telefone: string;
   veiculo: string;
   observacoes?: string;
@@ -78,7 +77,6 @@ export function AgendamentoModal({
         id_servico: servico.id_servico,
         data_agendamento: formData.data,
         hora_agendamento: formData.hora,
-        nome_cliente: formData.nome,
         telefone: formData.telefone,
         veiculo: formData.veiculo,
         observacoes: formData.observacoes,
