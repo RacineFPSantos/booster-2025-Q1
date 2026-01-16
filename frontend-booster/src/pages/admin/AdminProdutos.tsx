@@ -313,7 +313,8 @@ export function AdminProdutos() {
                           </td>
                           <td className="p-4">
                             <span className="font-semibold text-slate-900">
-                              R$ {produto.preco.toFixed(2)}
+                              R${" "}
+                              {Number(produto.preco_unitario || 0).toFixed(2)}
                             </span>
                           </td>
                           <td className="p-4">

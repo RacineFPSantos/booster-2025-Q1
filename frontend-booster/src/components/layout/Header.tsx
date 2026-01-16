@@ -10,6 +10,7 @@ import {
   LogOut,
   Package,
   Settings,
+  Shield,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { LoginModal } from "../auth/LoginModal";
@@ -64,14 +65,14 @@ export function Header() {
                 Peças
               </button>
 
-              {/* <button
+              <button
                 onClick={() => navigate("/servicos")}
                 className="text-slate-600 hover:text-blue-600"
               >
                 Serviços
-              </button> */}
+              </button>
 
-              <a href="#contato" className="text-slate-600 hover:text-blue-600">
+              <a href="/contato" className="text-slate-600 hover:text-blue-600">
                 Contato
               </a>
             </nav>
@@ -94,6 +95,18 @@ export function Header() {
                   </span>
                 )}
               </Button>
+
+              {/* Botão Painel Admin (visível para admins) */}
+              {isAuthenticated && user?.role === "ADMIN" && (
+                <Button
+                  variant="outline"
+                  className="hidden lg:flex items-center gap-2 text-purple-600 border-purple-300 hover:bg-purple-50"
+                  onClick={() => navigate("/admin")}
+                >
+                  <Shield className="h-4 w-4" />
+                  Admin
+                </Button>
+              )}
 
               {/* Mostrar botão de login OU menu do usuário */}
               {isAuthenticated && user ? (
@@ -137,8 +150,11 @@ export function Header() {
                     {user.role === "ADMIN" && (
                       <>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => navigate("/admin")}>
-                          <Settings className="h-4 w-4 mr-2" />
+                        <DropdownMenuItem
+                          onClick={() => navigate("/admin")}
+                          className="text-purple-600 font-medium focus:text-purple-700 focus:bg-purple-50"
+                        >
+                          <Shield className="h-4 w-4 mr-2" />
                           Painel Admin
                         </DropdownMenuItem>
                       </>

@@ -251,11 +251,11 @@ export function AdminPedidos() {
                           <td className="p-4">
                             <div>
                               <p className="font-medium text-slate-900">
-                                {pedido.cliente?.nome || "Cliente"}
+                                {pedido.usuario?.nome || "Cliente"}
                               </p>
-                              {pedido.cliente?.email && (
+                              {pedido.usuario?.email && (
                                 <p className="text-sm text-slate-500">
-                                  {pedido.cliente.email}
+                                  {pedido.usuario.email}
                                 </p>
                               )}
                             </div>
@@ -265,7 +265,7 @@ export function AdminPedidos() {
                           </td>
                           <td className="p-4">
                             <span className="font-semibold text-slate-900">
-                              R$ {pedido.valor_total.toFixed(2)}
+                              R$ {Number(pedido.valor_total || 0).toFixed(2)}
                             </span>
                           </td>
                           <td className="p-4">

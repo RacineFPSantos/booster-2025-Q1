@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ServicoCard } from "@/components/cards/ServicoCard";
+import {
+  AgendamentoModal,
+  AgendamentoData,
+} from "@/components/services/AgendamentoModal";
 import type { Servico, TipoServico } from "@/types/servico.types";
 import { Search, Filter, Loader2, Wrench } from "lucide-react";
 import { toast } from "sonner";
@@ -8,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { Toaster } from "@/components/ui/sonner";
+import { ServicoService } from "@/services/servicoService";
 
 export function Servicos() {
   const [searchParams] = useSearchParams();
@@ -18,127 +22,10 @@ export function Servicos() {
   const [isLoading, setIsLoading] = useState(true);
   const [busca, setBusca] = useState("");
   const [tipoFiltro, setTipoFiltro] = useState<string>("");
-
-  // Dados mockados de tipos de serviço
-  const tiposServicoMock: TipoServico[] = [
-    { id_tipo_servico: 1, nome: "Manutenção Preventiva" },
-    { id_tipo_servico: 2, nome: "Manutenção Corretiva" },
-    { id_tipo_servico: 3, nome: "Diagnóstico" },
-    { id_tipo_servico: 4, nome: "Estética Automotiva" },
-    { id_tipo_servico: 5, nome: "Instalação" },
-  ];
-
-  // Dados mockados de serviços
-  const servicosMock: Servico[] = [
-    {
-      id_servico: 1,
-      nome: "Troca de Óleo",
-      descricao: "Troca de óleo do motor com filtro, verificação de níveis e inspeção visual completa",
-      preco: 150.00,
-      duracao_estimada: 45,
-      id_tipo_servico: 1,
-      tipo_servico: tiposServicoMock[0],
-    },
-    {
-      id_servico: 2,
-      nome: "Alinhamento e Balanceamento",
-      descricao: "Alinhamento computadorizado das rodas e balanceamento completo dos pneus",
-      preco: 120.00,
-      duracao_estimada: 60,
-      id_tipo_servico: 1,
-      tipo_servico: tiposServicoMock[0],
-    },
-    {
-      id_servico: 3,
-      nome: "Revisão de Freios",
-      descricao: "Inspeção completa do sistema de freios, pastilhas, discos e fluido",
-      preco: 200.00,
-      duracao_estimada: 90,
-      id_tipo_servico: 1,
-      tipo_servico: tiposServicoMock[0],
-    },
-    {
-      id_servico: 4,
-      nome: "Troca de Pastilhas de Freio",
-      descricao: "Substituição das pastilhas de freio dianteiras ou traseiras",
-      preco: 280.00,
-      duracao_estimada: 120,
-      id_tipo_servico: 2,
-      tipo_servico: tiposServicoMock[1],
-    },
-    {
-      id_servico: 5,
-      nome: "Troca de Correia Dentada",
-      descricao: "Substituição da correia dentada do motor com verificação de tensionadores",
-      preco: 450.00,
-      duracao_estimada: 180,
-      id_tipo_servico: 2,
-      tipo_servico: tiposServicoMock[1],
-    },
-    {
-      id_servico: 6,
-      nome: "Diagnóstico Computadorizado",
-      descricao: "Análise completa do sistema eletrônico do veículo com scanner automotivo",
-      preco: 80.00,
-      duracao_estimada: 30,
-      id_tipo_servico: 3,
-      tipo_servico: tiposServicoMock[2],
-    },
-    {
-      id_servico: 7,
-      nome: "Troca de Bateria",
-      descricao: "Substituição da bateria com teste do sistema elétrico",
-      preco: 350.00,
-      duracao_estimada: 30,
-      id_tipo_servico: 2,
-      tipo_servico: tiposServicoMock[1],
-    },
-    {
-      id_servico: 8,
-      nome: "Limpeza de Injetores",
-      descricao: "Limpeza profunda dos bicos injetores de combustível",
-      preco: 180.00,
-      duracao_estimada: 90,
-      id_tipo_servico: 1,
-      tipo_servico: tiposServicoMock[0],
-    },
-    {
-      id_servico: 9,
-      nome: "Polimento e Cristalização",
-      descricao: "Polimento completo da pintura com aplicação de cristalizador",
-      preco: 400.00,
-      duracao_estimada: 240,
-      id_tipo_servico: 4,
-      tipo_servico: tiposServicoMock[3],
-    },
-    {
-      id_servico: 10,
-      nome: "Instalação de Som Automotivo",
-      descricao: "Instalação completa de sistema de som com chicotes e conectores",
-      preco: 150.00,
-      duracao_estimada: 120,
-      id_tipo_servico: 5,
-      tipo_servico: tiposServicoMock[4],
-    },
-    {
-      id_servico: 11,
-      nome: "Higienização de Ar-Condicionado",
-      descricao: "Limpeza completa do sistema de ar-condicionado com produtos especializados",
-      preco: 120.00,
-      duracao_estimada: 60,
-      id_tipo_servico: 1,
-      tipo_servico: tiposServicoMock[0],
-    },
-    {
-      id_servico: 12,
-      nome: "Troca de Amortecedores",
-      descricao: "Substituição dos amortecedores dianteiros ou traseiros",
-      preco: 600.00,
-      duracao_estimada: 180,
-      id_tipo_servico: 2,
-      tipo_servico: tiposServicoMock[1],
-    },
-  ];
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [servicoSelecionado, setServicoSelecionado] = useState<Servico | null>(
+    null,
+  );
 
   useEffect(() => {
     loadData();
@@ -177,12 +64,15 @@ export function Servicos() {
     try {
       setIsLoading(true);
 
-      // Simulando delay de API
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Carregar dados da API
+      const [servicosData, tiposData] = await Promise.all([
+        ServicoService.findAll(),
+        ServicoService.findAllTipos(),
+      ]);
 
-      setServicos(servicosMock);
-      setServicosFiltrados(servicosMock);
-      setTiposServico(tiposServicoMock);
+      setServicos(servicosData);
+      setServicosFiltrados(servicosData);
+      setTiposServico(tiposData);
     } catch (error) {
       console.error("Erro ao carregar serviços:", error);
       toast.error("Erro ao carregar serviços. Tente novamente.");
@@ -220,14 +110,29 @@ export function Servicos() {
   };
 
   const handleAgendar = (servico: Servico) => {
-    toast.success(`Agendamento de "${servico.nome}" em desenvolvimento!`);
-    // TODO: Implementar lógica de agendamento
+    setServicoSelecionado(servico);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmarAgendamento = async (data: AgendamentoData) => {
+    try {
+      // Criar agendamento via API
+      await ServicoService.createAgendamento(data);
+
+      toast.success(
+        `Agendamento de "${servicoSelecionado?.nome}" realizado com sucesso!`,
+      );
+      toast.info("Você receberá uma confirmação por telefone em breve.");
+    } catch (error) {
+      console.error("Erro ao agendar:", error);
+      toast.error("Erro ao realizar agendamento. Tente novamente.");
+      throw error;
+    }
   };
 
   if (isLoading) {
     return (
       <>
-        <Toaster />
         <Header />
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
@@ -242,7 +147,6 @@ export function Servicos() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Toaster />
       <Header />
 
       {/* Header */}
@@ -297,7 +201,10 @@ export function Servicos() {
               >
                 <option value="">Todos os tipos</option>
                 {tiposServico.map((tipo) => (
-                  <option key={tipo.id_tipo_servico} value={tipo.id_tipo_servico}>
+                  <option
+                    key={tipo.id_tipo_servico}
+                    value={tipo.id_tipo_servico}
+                  >
                     {tipo.nome}
                   </option>
                 ))}
@@ -360,6 +267,14 @@ export function Servicos() {
       </div>
 
       <Footer />
+
+      {/* Modal de Agendamento */}
+      <AgendamentoModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        servico={servicoSelecionado}
+        onConfirm={handleConfirmarAgendamento}
+      />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { Pedido } from "@/types/pedido.types";
 import { Card, CardContent } from "@/components/ui/card";
 import { OrderStatusBadge } from "./OrderStatusBadge";
+import { OrderTimeline } from "./OrderTimeline";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Calendar, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -34,49 +35,56 @@ export function OrderCard({ pedido }: OrderCardProps) {
   return (
     <Card className="hover:shadow-lg transition-shadow">
       <CardContent className="p-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          {/* Left side - Order info */}
-          <div className="flex-1 space-y-3">
-            {/* Order number and date */}
-            <div>
-              <h3 className="text-lg font-bold text-slate-900 mb-1">
-                Pedido #{pedido.id_pedido.toString().padStart(6, "0")}
-              </h3>
-              <div className="flex items-center gap-2 text-sm text-slate-600">
-                <Calendar className="h-4 w-4" />
-                <span>{formatDate(pedido.data_hora)}</span>
+        <div className="space-y-6">
+          {/* Header - Order info */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex-1 space-y-3">
+              {/* Order number and date */}
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 mb-1">
+                  Pedido #{pedido.id_pedido.toString().padStart(6, "0")}
+                </h3>
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <Calendar className="h-4 w-4" />
+                  <span>{formatDate(pedido.data_hora)}</span>
+                </div>
+              </div>
+
+              {/* Items count and total */}
+              <div className="flex items-center gap-4 text-sm">
+                <div className="flex items-center gap-1.5 text-slate-600">
+                  <ShoppingBag className="h-4 w-4" />
+                  <span>
+                    {itemCount} {itemCount === 1 ? "item" : "itens"}
+                  </span>
+                </div>
+                <div className="text-lg font-bold text-blue-600">
+                  {formatPrice(Number(pedido.valor_total))}
+                </div>
+              </div>
+
+              {/* Status badge */}
+              <div>
+                <OrderStatusBadge status={pedido.status} />
               </div>
             </div>
 
-            {/* Items count and total */}
-            <div className="flex items-center gap-4 text-sm">
-              <div className="flex items-center gap-1.5 text-slate-600">
-                <ShoppingBag className="h-4 w-4" />
-                <span>
-                  {itemCount} {itemCount === 1 ? "item" : "itens"}
-                </span>
-              </div>
-              <div className="text-lg font-bold text-blue-600">
-                {formatPrice(pedido.valor_total)}
-              </div>
-            </div>
-
-            {/* Status badge */}
+            {/* Right side - Action button */}
             <div>
-              <OrderStatusBadge status={pedido.status} />
+              <Button
+                variant="outline"
+                className="w-full md:w-auto"
+                onClick={() => navigate(`/orders/${pedido.id_pedido}`)}
+              >
+                Ver Detalhes
+                <ChevronRight className="h-4 w-4 ml-2" />
+              </Button>
             </div>
           </div>
 
-          {/* Right side - Action button */}
-          <div>
-            <Button
-              variant="outline"
-              className="w-full md:w-auto"
-              onClick={() => navigate(`/orders/${pedido.id_pedido}`)}
-            >
-              Ver Detalhes
-              <ChevronRight className="h-4 w-4 ml-2" />
-            </Button>
+          {/* Timeline */}
+          <div className="pt-4 border-t">
+            <OrderTimeline currentStatus={pedido.status} />
           </div>
         </div>
       </CardContent>

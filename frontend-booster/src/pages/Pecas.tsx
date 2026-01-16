@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { Toaster } from "@/components/ui/sonner";
 
 export function Pecas() {
   const [searchParams] = useSearchParams();
@@ -131,7 +130,6 @@ export function Pecas() {
   if (isLoading) {
     return (
       <>
-        <Toaster />
         <Header />
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
@@ -146,7 +144,6 @@ export function Pecas() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Toaster />
       <Header />
       {/* Header */}
       <div className="bg-white border-b">

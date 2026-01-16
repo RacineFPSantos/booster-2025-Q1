@@ -4,9 +4,11 @@ import { CartProvider } from "./contexts/CartContext";
 import { Home } from "./pages/Home";
 import { Register } from "./pages/Register";
 import { Pecas } from "./pages/Pecas";
+import { Servicos } from "./pages/Servicos";
 import { Cart } from "./pages/Cart";
 import { Orders } from "./pages/Orders";
 import { OrderDetails } from "./pages/OrderDetails";
+import { Contato } from "./pages/Contato";
 import { Checkout } from "./pages/Checkout";
 import { OrderConfirmation } from "./pages/OrderConfirmation";
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
@@ -14,6 +16,7 @@ import { AdminProdutos } from "./pages/admin/AdminProdutos";
 import { AdminPedidos } from "./pages/admin/AdminPedidos";
 import { AdminUsuarios } from "./pages/admin/AdminUsuarios";
 import { AdminConfiguracoes } from "./pages/admin/AdminConfiguracoes";
+import { AdminChat } from "./pages/admin/AdminChat";
 import { Toaster } from "./components/ui/sonner";
 import "./App.css";
 
@@ -59,6 +62,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/pecas" element={<Pecas />} />
+      <Route path="/servicos" element={<Servicos />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route
@@ -67,6 +71,8 @@ function AppRoutes() {
       />
       <Route path="/orders" element={<Orders />} />
       <Route path="/orders/:orderId" element={<OrderDetails />} />
+
+      <Route path="/contato" element={<Contato />} />
 
       {/* Rotas de Admin */}
       <Route
@@ -106,6 +112,14 @@ function AppRoutes() {
         element={
           <AdminRoute>
             <AdminConfiguracoes />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/chat"
+        element={
+          <AdminRoute>
+            <AdminChat />
           </AdminRoute>
         }
       />

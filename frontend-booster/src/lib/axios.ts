@@ -1,12 +1,12 @@
-import axios from 'axios';
+import axios from "axios";
 
 /**
  * Instância do Axios configurada para a API
  */
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
+  baseURL: "http://localhost:3000",
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -16,7 +16,7 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // Pegar o token do localStorage
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("access_token");
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -26,7 +26,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 /**
@@ -37,11 +37,11 @@ api.interceptors.response.use(
   (error) => {
     // Se receber 401 (não autorizado), redirecionar para login
     if (error.response?.status === 401) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("user");
+      window.location.href = "/login";
     }
 
     return Promise.reject(error);
-  }
+  },
 );

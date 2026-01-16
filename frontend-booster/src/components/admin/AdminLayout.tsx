@@ -9,6 +9,8 @@ import {
   Settings,
   LogOut,
   Menu,
+  MessageSquare,
+  Store,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -34,6 +36,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     { icon: Package, label: "Produtos", path: "/admin/produtos" },
     { icon: ShoppingCart, label: "Pedidos", path: "/admin/pedidos" },
     { icon: Users, label: "Usuários", path: "/admin/usuarios" },
+    { icon: MessageSquare, label: "Chat", path: "/admin/chat" },
     { icon: Settings, label: "Configurações", path: "/admin/configuracoes" },
   ];
 
@@ -77,6 +80,19 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
         {/* Menu Items */}
         <nav className="flex-1 p-4 space-y-2">
+          {/* Botão Voltar para Loja */}
+          <button
+            onClick={() => navigate("/")}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-green-400 hover:bg-slate-800 border border-green-400/30 ${!sidebarOpen && "justify-center"}`}
+          >
+            <Store className="h-5 w-5 flex-shrink-0" />
+            {sidebarOpen && (
+              <span className="font-medium">Voltar para Loja</span>
+            )}
+          </button>
+
+          <div className="h-2"></div>
+
           {menuItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
