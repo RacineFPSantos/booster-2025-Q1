@@ -106,7 +106,6 @@ export class AuthService {
         email: savedUser.email,
         role: savedUser.usuario_role,
         nome: savedUser.nome,
-        tipo_usuario: savedUser.tipo_usuario,
       },
     };
   }

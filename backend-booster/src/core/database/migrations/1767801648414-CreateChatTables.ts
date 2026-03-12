@@ -58,13 +58,18 @@ export class CreateChatTables1767801648414 implements MigrationInterface {
       }),
     );
 
-    // ATENÇÃO: Habilitar o Realtime via Migration (Comando SQL direto)
-    await queryRunner.query(
-      `ALTER PUBLICATION supabase_realtime ADD TABLE rooms;`,
+    // Habilitar Realtime via Publication (apenas se a publication existir — Supabase)
+    const result = await queryRunner.query(
+      `SELECT 1 FROM pg_publication WHERE pubname = 'supabase_realtime'`,
     );
-    await queryRunner.query(
-      `ALTER PUBLICATION supabase_realtime ADD TABLE messages;`,
-    );
+    if (result.length > 0) {
+      await queryRunner.query(
+        `ALTER PUBLICATION supabase_realtime ADD TABLE rooms;`,
+      );
+      await queryRunner.query(
+        `ALTER PUBLICATION supabase_realtime ADD TABLE messages;`,
+      );
+    }
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

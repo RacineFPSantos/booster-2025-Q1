@@ -19,6 +19,9 @@ export class Produto {
   @Column({ type: 'text', nullable: true })
   descricao: string;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  imagem_url: string;
+
   @Column({
     type: 'decimal',
     precision: 10,

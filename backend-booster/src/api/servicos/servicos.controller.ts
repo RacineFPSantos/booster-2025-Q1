@@ -40,14 +40,14 @@ export class ServicosController {
     @Body() createAgendamentoDto: CreateAgendamentoDto,
     @Request() req,
   ) {
-    const userId = req.user?.id_usuario;
+    const userId = req.user.id;
     return this.servicosService.createAgendamento(createAgendamentoDto, userId);
   }
 
   @Get('agendamento/meus')
   @UseGuards(JwtAuthGuard)
   async findMyAgendamentos(@Request() req) {
-    return this.servicosService.findMyAgendamentos(req.user.id_usuario);
+    return this.servicosService.findMyAgendamentos(req.user.id);
   }
 
   @Get('agendamento')

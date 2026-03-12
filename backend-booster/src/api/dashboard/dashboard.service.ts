@@ -55,7 +55,7 @@ export class DashboardService {
 
     // Total de clientes
     const totalClients = await this.userRepository.count({
-      where: { tipo_usuario: UserRole.CLIENT },
+      where: { usuario_role: UserRole.CLIENT },
     });
 
     // Calcular variações percentuais

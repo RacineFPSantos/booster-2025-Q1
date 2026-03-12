@@ -2,103 +2,93 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class RenameClienteToUser1761535539994 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    // 1. Criar o novo enum user_role_enum
+    // 1. Criar o enum usuario_role_enum
     await queryRunner.query(
-      `CREATE TYPE "public"."user_role_enum" AS ENUM('CLIENT', 'ADMIN')`,
+      `CREATE TYPE "public"."usuario_role_enum" AS ENUM('CLIENT', 'ADMIN')`,
     );
 
-    // 2. Renomear a tabela cliente para user
-    await queryRunner.query(`ALTER TABLE "cliente" RENAME TO "user"`);
+    // 2. Renomear a tabela cliente para usuario
+    await queryRunner.query(`ALTER TABLE "cliente" RENAME TO "usuario"`);
 
-    // 3. Renomear a coluna id_cliente para id_user
+    // 3. Renomear a coluna id_cliente para id_usuario
     await queryRunner.query(
-      `ALTER TABLE "user" RENAME COLUMN "id_cliente" TO "id_user"`,
+      `ALTER TABLE "usuario" RENAME COLUMN "id_cliente" TO "id_usuario"`,
     );
 
     // 4. Renomear a sequence (auto increment) da primary key
     await queryRunner.query(
-      `ALTER SEQUENCE "cliente_id_cliente_seq" RENAME TO "user_id_user_seq"`,
+      `ALTER SEQUENCE "cliente_id_cliente_seq" RENAME TO "usuario_id_usuario_seq"`,
     );
 
-    // 5. Adicionar a coluna role com o novo enum (se ainda não existir)
+    // 5. Renomear coluna senha para password_hash
+    await queryRunner.query(
+      `ALTER TABLE "usuario" RENAME COLUMN "senha" TO "password_hash"`,
+    );
+
+    // 6. Adicionar coluna is_active
     await queryRunner.query(`
-            DO $$
-            BEGIN
-                IF NOT EXISTS (
-                    SELECT 1 FROM information_schema.columns
-                    WHERE table_name = 'user' AND column_name = 'role'
-                ) THEN
-                    ALTER TABLE "user" ADD COLUMN "role" "public"."user_role_enum" NOT NULL DEFAULT 'CLIENT';
-                END IF;
-            END $$;
-        `);
+      ALTER TABLE "usuario" ADD COLUMN IF NOT EXISTS "is_active" boolean NOT NULL DEFAULT true;
+    `);
 
-    // 6. Se a coluna role já existia com o enum cliente_role_enum, converter para user_role_enum
+    // 7. Converter coluna role para usuario_role usando usuario_role_enum
     await queryRunner.query(`
-            DO $$
-            BEGIN
-                IF EXISTS (
-                    SELECT 1 FROM information_schema.columns
-                    WHERE table_name = 'user' AND column_name = 'role'
-                    AND udt_name = 'cliente_role_enum'
-                ) THEN
-                    -- Remover o default temporariamente
-                    ALTER TABLE "user" ALTER COLUMN "role" DROP DEFAULT;
+      ALTER TABLE "usuario" ALTER COLUMN "role" DROP DEFAULT;
+      ALTER TABLE "usuario" ALTER COLUMN "role" TYPE text;
+      ALTER TABLE "usuario" ALTER COLUMN "role" TYPE "public"."usuario_role_enum"
+        USING "role"::"public"."usuario_role_enum";
+      ALTER TABLE "usuario" ALTER COLUMN "role" SET DEFAULT 'CLIENT';
+    `);
 
-                    -- Converter a coluna para text
-                    ALTER TABLE "user" ALTER COLUMN "role" TYPE text;
+    await queryRunner.query(
+      `ALTER TABLE "usuario" RENAME COLUMN "role" TO "usuario_role"`,
+    );
 
-                    -- Converter para o novo enum
-                    ALTER TABLE "user" ALTER COLUMN "role" TYPE "public"."user_role_enum"
-                    USING "role"::"public"."user_role_enum";
-
-                    -- Recolocar o default
-                    ALTER TABLE "user" ALTER COLUMN "role" SET DEFAULT 'CLIENT';
-
-                    -- Dropar o enum antigo se existir
-                    DROP TYPE IF EXISTS "public"."cliente_role_enum";
-                END IF;
-            END $$;
-        `);
+    // 8. Dropar enum antigo
+    await queryRunner.query(`DROP TYPE IF EXISTS "public"."cliente_role_enum"`);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    // 1. Recriar o enum antigo (se necessário)
+    // 1. Recriar o enum antigo
     await queryRunner.query(
       `CREATE TYPE "public"."cliente_role_enum" AS ENUM('CLIENT', 'ADMIN')`,
     );
 
-    // 2. Converter a coluna role de volta para cliente_role_enum (se existir)
+    // 2. Reverter coluna usuario_role para role com cliente_role_enum
+    await queryRunner.query(
+      `ALTER TABLE "usuario" RENAME COLUMN "usuario_role" TO "role"`,
+    );
     await queryRunner.query(`
-            DO $$
-            BEGIN
-                IF EXISTS (
-                    SELECT 1 FROM information_schema.columns
-                    WHERE table_name = 'user' AND column_name = 'role'
-                ) THEN
-                    ALTER TABLE "user" ALTER COLUMN "role" DROP DEFAULT;
-                    ALTER TABLE "user" ALTER COLUMN "role" TYPE text;
-                    ALTER TABLE "user" ALTER COLUMN "role" TYPE "public"."cliente_role_enum"
-                    USING "role"::"public"."cliente_role_enum";
-                    ALTER TABLE "user" ALTER COLUMN "role" SET DEFAULT 'CLIENT';
-                END IF;
-            END $$;
-        `);
+      ALTER TABLE "usuario" ALTER COLUMN "role" DROP DEFAULT;
+      ALTER TABLE "usuario" ALTER COLUMN "role" TYPE text;
+      ALTER TABLE "usuario" ALTER COLUMN "role" TYPE "public"."cliente_role_enum"
+        USING "role"::"public"."cliente_role_enum";
+      ALTER TABLE "usuario" ALTER COLUMN "role" SET DEFAULT 'CLIENT';
+    `);
 
-    // 3. Renomear a sequence de volta
+    // 3. Remover is_active
     await queryRunner.query(
-      `ALTER SEQUENCE "user_id_user_seq" RENAME TO "cliente_id_cliente_seq"`,
+      `ALTER TABLE "usuario" DROP COLUMN IF EXISTS "is_active"`,
     );
 
-    // 4. Renomear a coluna id_user de volta para id_cliente
+    // 4. Renomear password_hash de volta para senha
     await queryRunner.query(
-      `ALTER TABLE "user" RENAME COLUMN "id_user" TO "id_cliente"`,
+      `ALTER TABLE "usuario" RENAME COLUMN "password_hash" TO "senha"`,
     );
 
-    // 5. Renomear a tabela de volta para cliente
-    await queryRunner.query(`ALTER TABLE "user" RENAME TO "cliente"`);
+    // 5. Renomear a sequence de volta
+    await queryRunner.query(
+      `ALTER SEQUENCE "usuario_id_usuario_seq" RENAME TO "cliente_id_cliente_seq"`,
+    );
 
-    // 6. Dropar o enum user_role_enum
-    await queryRunner.query(`DROP TYPE IF EXISTS "public"."user_role_enum"`);
+    // 6. Renomear a coluna id_usuario de volta para id_cliente
+    await queryRunner.query(
+      `ALTER TABLE "usuario" RENAME COLUMN "id_usuario" TO "id_cliente"`,
+    );
+
+    // 7. Renomear a tabela de volta para cliente
+    await queryRunner.query(`ALTER TABLE "usuario" RENAME TO "cliente"`);
+
+    // 8. Dropar o enum usuario_role_enum
+    await queryRunner.query(`DROP TYPE IF EXISTS "public"."usuario_role_enum"`);
   }
 }

@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { TipoClienteEnum } from '@shared/enums/database.enums';
 import { UserRole } from '@shared/enums/database.enums';
 
 @Entity('usuario')
@@ -18,15 +17,6 @@ export class User {
 
   @Column({ type: 'varchar', nullable: false })
   nome: string;
-
-  @Column({
-    name: 'tipo_usuario',
-    type: 'enum',
-    enum: UserRole,
-    enumName: 'tipo_usuario_enum',
-    default: UserRole.CLIENT,
-  })
-  tipo_usuario: UserRole;
 
   @Column({
     name: 'usuario_role',

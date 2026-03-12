@@ -78,7 +78,7 @@ export class UserService {
   async updateRole(id: number, role: UserRole) {
     await this.usersRepository.update(
       { id_usuario: id },
-      { usuario_role: role, tipo_usuario: role },
+      { usuario_role: role },
     );
 
     return this.findOne(id);
