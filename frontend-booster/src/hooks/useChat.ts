@@ -41,7 +41,10 @@ export function useChat(roomId: string | null) {
         console.warn("Supabase error, tentando API REST:", error);
         // Fallback: buscar via API REST
         const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-        const response = await fetch(`${apiUrl}/chat/rooms/${roomId}/messages`);
+        const token = localStorage.getItem("access_token");
+        const response = await fetch(`${apiUrl}/chat/rooms/${roomId}/messages`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
         const apiData = await response.json();
         setMessages(apiData || []);
       } else {

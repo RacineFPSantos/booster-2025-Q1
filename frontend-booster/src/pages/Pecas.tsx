@@ -102,16 +102,18 @@ export function Pecas() {
 
     // Filtro por categoria
     if (categoriaFiltro) {
-      resultado = resultado.filter(
-        (p) => p.id_categoria === Number(categoriaFiltro),
-      );
+      resultado = resultado.filter((p) => {
+        const idCat = Number(p.id_categoria ?? p.categoria?.id_categoria);
+        return idCat === Number(categoriaFiltro);
+      });
     }
 
     // Filtro por fabricante
     if (fabricanteFiltro) {
-      resultado = resultado.filter(
-        (p) => p.id_fabricante === Number(fabricanteFiltro),
-      );
+      resultado = resultado.filter((p) => {
+        const idFab = Number(p.id_fabricante ?? p.fabricante?.id_fabricante);
+        return idFab === Number(fabricanteFiltro);
+      });
     }
 
     setProdutosFiltrados(resultado);

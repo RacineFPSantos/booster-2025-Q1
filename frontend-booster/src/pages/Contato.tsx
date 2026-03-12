@@ -9,15 +9,18 @@ import {
   Send,
 } from "lucide-react";
 import { useChat } from "@/hooks/useChat";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function Contato() {
+  const { user, isAuthenticated } = useAuth();
   // Estado para controlar o que exibir: 'options', 'email' ou 'chat'
   const [view, setView] = useState<"options" | "email" | "chat">("options");
   const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
-  const [customerId, setCustomerId] = useState<string>("");
   const [messageInput, setMessageInput] = useState("");
   const [isCreatingRoom, setIsCreatingRoom] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  // Identificador do usuário atual para comparar com sender_id das mensagens
+  const myId = user ? String(user.id) : null;
 
   const { messages, loading, sendMessage, roomStatus } = useChat(activeRoomId);
 
@@ -36,18 +39,21 @@ export function Contato() {
   };
 
   const handleStartChat = async () => {
-    if (!customerId.trim()) {
-      alert("Por favor, digite seu nome ou email para iniciar o chat");
+    if (!isAuthenticated) {
+      alert("Você precisa estar logado para usar o chat ao vivo.");
       return;
     }
 
     setIsCreatingRoom(true);
     try {
       const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      const token = localStorage.getItem("access_token");
       const response = await fetch(`${apiUrl}/chat/rooms`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ customerId: customerId.trim() }),
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
       });
 
       if (!response.ok) throw new Error("Erro ao criar sala");
@@ -68,7 +74,7 @@ export function Contato() {
     if (!messageInput.trim() || !activeRoomId) return;
 
     try {
-      await sendMessage(messageInput, customerId);
+      await sendMessage(messageInput, myId ?? "");
       setMessageInput("");
     } catch (error) {
       console.error("Erro ao enviar mensagem:", error);
@@ -81,10 +87,12 @@ export function Contato() {
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      const token = localStorage.getItem("access_token");
       const response = await fetch(
         `${apiUrl}/chat/rooms/${activeRoomId}/reopen`,
         {
           method: "PATCH",
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
         },
       );
 
@@ -140,20 +148,24 @@ export function Contato() {
               <p className="text-sm text-slate-500 mb-4">
                 Fale com um consultor
               </p>
-              <input
-                type="text"
-                placeholder="Seu nome ou email"
-                value={customerId}
-                onChange={(e) => setCustomerId(e.target.value)}
-                className="w-full mb-3 px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500"
-              />
-              <button
-                onClick={handleStartChat}
-                disabled={isCreatingRoom}
-                className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm disabled:opacity-50"
-              >
-                {isCreatingRoom ? "Conectando..." : "Iniciar Chat"}
-              </button>
+              {isAuthenticated ? (
+                <>
+                  <p className="text-xs text-slate-400 mb-3">
+                    Conectado como <strong>{user?.nome}</strong>
+                  </p>
+                  <button
+                    onClick={handleStartChat}
+                    disabled={isCreatingRoom}
+                    className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm disabled:opacity-50"
+                  >
+                    {isCreatingRoom ? "Conectando..." : "Iniciar Chat"}
+                  </button>
+                </>
+              ) : (
+                <p className="text-sm text-amber-600 bg-amber-50 border border-amber-200 rounded-md px-3 py-2">
+                  Faça login para usar o chat ao vivo.
+                </p>
+              )}
             </div>
 
             {/* Card Email */}
@@ -223,14 +235,14 @@ export function Contato() {
                     <div
                       key={msg.id}
                       className={`flex ${
-                        msg.sender_id === customerId
+                        msg.sender_id === myId
                           ? "justify-end"
                           : "justify-start"
                       }`}
                     >
                       <div
                         className={`max-w-[70%] rounded-lg px-4 py-2 ${
-                          msg.sender_id === customerId
+                          msg.sender_id === myId
                             ? "bg-blue-600 text-white"
                             : "bg-white border border-slate-200 text-slate-800"
                         }`}
@@ -238,7 +250,7 @@ export function Contato() {
                         <p className="text-sm">{msg.content}</p>
                         <p
                           className={`text-xs mt-1 ${
-                            msg.sender_id === customerId
+                            msg.sender_id === myId
                               ? "text-blue-100"
                               : "text-slate-500"
                           }`}

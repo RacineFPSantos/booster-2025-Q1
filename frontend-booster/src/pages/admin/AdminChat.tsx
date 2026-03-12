@@ -28,7 +28,7 @@ export function AdminChat() {
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [messageInput, setMessageInput] = useState("");
   const [filter, setFilter] = useState<FilterType>("open");
-  const adminId = user?.nome || "Administrador";
+  const adminId = user ? String(user.id) : "Administrador";
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { messages, loading, sendMessage, refreshMessages } = useChat(
@@ -81,8 +81,11 @@ export function AdminChat() {
           break;
       }
 
+      const token = localStorage.getItem("access_token");
       console.log("🔍 Buscando salas com filtro:", filter, "URL:", url);
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
       console.log("📡 Response status:", response.status);
       if (!response.ok) throw new Error("Erro ao buscar salas");
       const data = await response.json();
@@ -109,11 +112,15 @@ export function AdminChat() {
   ) => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-      console.log("📡 Atualizando status:", { roomId, status, adminId });
+      const token = localStorage.getItem("access_token");
+      console.log("📡 Atualizando status:", { roomId, status });
       const response = await fetch(`${apiUrl}/chat/rooms/${roomId}/status`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status, adminId }),
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ status }),
       });
       const result = await response.json();
       console.log("✅ Resposta do servidor:", result);
@@ -149,9 +156,13 @@ export function AdminChat() {
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      const token = localStorage.getItem("access_token");
       const response = await fetch(`${apiUrl}/chat/rooms/clean-inactive`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({ inactiveMinutes: 30 }),
       });
 

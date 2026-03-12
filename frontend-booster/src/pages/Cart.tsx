@@ -13,6 +13,28 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useState } from "react";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+function CartItemImage({ imagemUrl, nome }: { imagemUrl?: string; nome?: string }) {
+  const [imgError, setImgError] = useState(false);
+  if (imagemUrl && !imgError) {
+    return (
+      <img
+        src={`${API_BASE_URL}${imagemUrl}`}
+        alt={nome}
+        className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
+        onError={() => setImgError(true)}
+      />
+    );
+  }
+  return (
+    <div className="w-24 h-24 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
+      <Package className="h-10 w-10 text-slate-400" />
+    </div>
+  );
+}
 
 export function Cart() {
   const { cart, removeItem, updateQuantidade, clearCart } = useCart();
@@ -120,10 +142,10 @@ export function Cart() {
                     <Card key={item.id_carrinho_item}>
                       <CardContent className="p-4">
                         <div className="flex gap-4">
-                          {/* Imagem placeholder */}
-                          <div className="w-24 h-24 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <Package className="h-10 w-10 text-slate-400" />
-                          </div>
+                          <CartItemImage
+                            imagemUrl={item.produto?.imagem_url}
+                            nome={item.produto?.nome}
+                          />
 
                           {/* Informações */}
                           <div className="flex-1 min-w-0">

@@ -12,7 +12,6 @@ export interface User {
   nome: string;
   email: string;
   documento: string;
-  tipo_usuario: UserRole;
   usuario_role: UserRole;
   is_active: boolean;
   created_at: Date | string;

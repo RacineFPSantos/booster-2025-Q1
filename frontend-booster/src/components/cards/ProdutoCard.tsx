@@ -2,6 +2,9 @@ import { type Produto } from "@/types/produto.types";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Package } from "lucide-react";
+import { useState } from "react";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 interface ProdutoCardProps {
   produto: Produto;
@@ -9,6 +12,8 @@ interface ProdutoCardProps {
 }
 
 export function ProdutoCard({ produto, onAddToCart }: ProdutoCardProps) {
+  const [imgError, setImgError] = useState(false);
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("pt-BR", {
       style: "currency",
@@ -18,8 +23,17 @@ export function ProdutoCard({ produto, onAddToCart }: ProdutoCardProps) {
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      <div className="bg-gradient-to-br from-blue-50 to-slate-50 p-6 flex items-center justify-center h-48">
-        <Package className="h-20 w-20 text-slate-300" />
+      <div className="bg-gradient-to-br from-blue-50 to-slate-50 flex items-center justify-center h-48 overflow-hidden">
+        {produto.imagem_url && !imgError ? (
+          <img
+            src={`${API_BASE_URL}${produto.imagem_url}`}
+            alt={produto.nome}
+            className="h-full w-full object-cover"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <Package className="h-20 w-20 text-slate-300" />
+        )}
       </div>
 
       <CardContent className="p-4">

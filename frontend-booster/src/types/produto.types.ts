@@ -22,6 +22,7 @@ export interface Produto {
   id_produto: number;
   nome: string;
   descricao: string;
+  imagem_url?: string;
   preco_unitario: number;
   preco: number; // Alias para preco_unitario
   id_categoria: number;

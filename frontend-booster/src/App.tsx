@@ -20,6 +20,25 @@ import { AdminChat } from "./pages/admin/AdminChat";
 import { Toaster } from "./components/ui/sonner";
 import "./App.css";
 
+// Componente para rotas que exigem apenas autenticação
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Carregando...
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
+}
+
 // Componente para rotas protegidas de admin
 function AdminRoute({ children }: { children: React.ReactNode }) {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -33,11 +52,11 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/" />;
+    return <Navigate to="/" replace />;
   }
 
   if (user?.role !== "ADMIN") {
-    return <Navigate to="/" />;
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
@@ -54,25 +73,52 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return !isAuthenticated ? <>{children}</> : <Navigate to="/" />;
+  return !isAuthenticated ? <>{children}</> : <Navigate to="/" replace />;
 }
 
 function AppRoutes() {
   return (
     <Routes>
+      {/* Rotas públicas */}
       <Route path="/" element={<Home />} />
       <Route path="/pecas" element={<Pecas />} />
       <Route path="/servicos" element={<Servicos />} />
       <Route path="/cart" element={<Cart />} />
-      <Route path="/checkout" element={<Checkout />} />
+      <Route path="/contato" element={<Contato />} />
+
+      {/* Rotas que exigem autenticação */}
+      <Route
+        path="/checkout"
+        element={
+          <ProtectedRoute>
+            <Checkout />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/order-confirmation/:orderId"
-        element={<OrderConfirmation />}
+        element={
+          <ProtectedRoute>
+            <OrderConfirmation />
+          </ProtectedRoute>
+        }
       />
-      <Route path="/orders" element={<Orders />} />
-      <Route path="/orders/:orderId" element={<OrderDetails />} />
-
-      <Route path="/contato" element={<Contato />} />
+      <Route
+        path="/orders"
+        element={
+          <ProtectedRoute>
+            <Orders />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/orders/:orderId"
+        element={
+          <ProtectedRoute>
+            <OrderDetails />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Rotas de Admin */}
       <Route
@@ -132,7 +178,7 @@ function AppRoutes() {
           </PublicRoute>
         }
       />
-      <Route path="*" element={<Navigate to="/" />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
