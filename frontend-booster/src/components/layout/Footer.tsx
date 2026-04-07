@@ -12,13 +12,13 @@ import {
 
 export function Footer() {
   return (
-    <footer className="bg-slate-900 text-slate-300 py-16">
+    <footer className="bg-theme-surface text-theme-text-secondary py-16">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Car className="h-8 w-8 text-blue-400" />
-              <span className="text-2xl font-bold text-white">
+              <span className="text-2xl font-bold text-theme-text-primary">
                 AI<span className="text-blue-400">Car</span>
               </span>
             </div>
@@ -43,7 +43,9 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-semibold text-lg mb-4">Produtos</h3>
+            <h3 className="text-theme-text-primary font-semibold text-lg mb-4">
+              Produtos
+            </h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <a href="#" className="hover:text-blue-400 transition-colors">
@@ -74,7 +76,9 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-semibold text-lg mb-4">Serviços</h3>
+            <h3 className="text-theme-text-primary font-semibold text-lg mb-4">
+              Serviços
+            </h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <a href="#" className="hover:text-blue-400 transition-colors">
@@ -105,14 +109,16 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-semibold text-lg mb-4">Contato</h3>
+            <h3 className="text-theme-text-primary font-semibold text-lg mb-4">
+              Contato
+            </h3>
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2">
                 <MapPin className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
                 <span>
-                  Av. Principal, 1234
+                  Av. Marquês de Olinda, 1234
                   <br />
-                  São Paulo - SP
+                  Recife - PE
                 </span>
               </li>
               <li className="flex items-center gap-2">
@@ -135,7 +141,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-slate-800 pt-8">
+        <div className="border-t border-theme-border pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
             <p>&copy; 2025 AiCar. Todos os direitos reservados.</p>
             <div className="flex gap-6">

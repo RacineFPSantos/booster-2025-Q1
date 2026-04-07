@@ -8,9 +8,6 @@ import { Search, Filter, Loader2, Package } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-
 export function Pecas() {
   const [searchParams] = useSearchParams();
   const { addProduto } = useCart();
@@ -131,29 +128,24 @@ export function Pecas() {
 
   if (isLoading) {
     return (
-      <>
-        <Header />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto mb-4" />
-            <p className="text-slate-600">Carregando peças...</p>
-          </div>
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-brand-blue mx-auto mb-4" />
+          <p className="text-theme-text-secondary">Carregando peças...</p>
         </div>
-        <Footer />
-      </>
+      </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Header />
+    <>
       {/* Header */}
-      <div className="bg-white border-b">
+      <div className="bg-theme-surface border-b border-theme-border">
         <div className="container mx-auto px-4 py-6">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">
+          <h1 className="text-3xl font-bold text-theme-text-primary mb-2">
             Catálogo de Peças
             {categoriaFiltro && categorias.length > 0 && (
-              <span className="text-blue-600">
+              <span className="text-brand-blue">
                 {" "}
                 -{" "}
                 {
@@ -164,7 +156,7 @@ export function Pecas() {
               </span>
             )}
           </h1>
-          <p className="text-slate-600">
+          <p className="text-theme-text-secondary">
             {categoriaFiltro
               ? "Filtrando por categoria selecionada"
               : "Encontre as melhores peças para seu veículo"}
@@ -173,13 +165,13 @@ export function Pecas() {
       </div>
 
       {/* Filtros */}
-      <div className="bg-white border-b">
+      <div className="bg-theme-surface border-b border-theme-border">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Busca */}
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-theme-text-muted" />
                 <Input
                   type="text"
                   placeholder="Buscar por nome ou descrição..."
@@ -193,7 +185,7 @@ export function Pecas() {
             {/* Filtro Categoria */}
             <div className="w-full lg:w-64">
               <select
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-theme-bg border border-theme-border text-theme-text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-brand-blue transition-colors duration-300"
                 value={categoriaFiltro}
                 onChange={(e) => setCategoriaFiltro(e.target.value)}
               >
@@ -209,7 +201,7 @@ export function Pecas() {
             {/* Filtro Fabricante */}
             <div className="w-full lg:w-64">
               <select
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-theme-bg border border-theme-border text-theme-text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-brand-blue transition-colors duration-300"
                 value={fabricanteFiltro}
                 onChange={(e) => setFabricanteFiltro(e.target.value)}
               >
@@ -232,7 +224,7 @@ export function Pecas() {
           </div>
 
           {/* Contador de resultados */}
-          <div className="mt-4 text-sm text-slate-600">
+          <div className="mt-4 text-sm text-theme-text-secondary">
             {produtosFiltrados.length === 0 ? (
               <span>Nenhuma peça encontrada</span>
             ) : (
@@ -251,11 +243,11 @@ export function Pecas() {
       <div className="container mx-auto px-4 py-8">
         {produtosFiltrados.length === 0 ? (
           <div className="text-center py-12">
-            <Package className="h-16 w-16 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-slate-700 mb-2">
+            <Package className="h-16 w-16 text-theme-text-muted mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-theme-text-primary mb-2">
               Nenhuma peça encontrada
             </h3>
-            <p className="text-slate-500 mb-4">
+            <p className="text-theme-text-secondary mb-4">
               Tente ajustar os filtros ou fazer uma nova busca
             </p>
             {(busca || categoriaFiltro || fabricanteFiltro) && (
@@ -276,8 +268,6 @@ export function Pecas() {
           </div>
         )}
       </div>
-
-      <Footer />
-    </div>
+    </>
   );
 }

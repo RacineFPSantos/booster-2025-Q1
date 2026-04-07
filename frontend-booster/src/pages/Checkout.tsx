@@ -2,8 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -79,12 +77,9 @@ export function Checkout() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Header />
-
-      <div className="flex-1">
+    <div className="flex-1">
         {/* Header */}
-        <div className="bg-white border-b">
+        <div className="bg-theme-bg border-b border-theme-border">
           <div className="container mx-auto px-4 py-6">
             <div className="flex items-center gap-4">
               <Button
@@ -97,11 +92,11 @@ export function Checkout() {
                 Voltar ao Carrinho
               </Button>
               <div>
-                <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
+                <h1 className="text-3xl font-bold text-theme-text-primary flex items-center gap-3">
                   <ShoppingBag className="h-8 w-8" />
                   Finalizar Compra
                 </h1>
-                <p className="text-slate-600 mt-1">
+                <p className="text-theme-text-secondary mt-1">
                   Revise seus dados e finalize seu pedido
                 </p>
               </div>
@@ -124,11 +119,11 @@ export function Checkout() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
-                    <Label className="text-sm text-slate-600">Nome</Label>
+                    <Label className="text-sm text-theme-text-secondary">Nome</Label>
                     <p className="font-medium">{user?.nome}</p>
                   </div>
                   <div>
-                    <Label className="text-sm text-slate-600">Email</Label>
+                    <Label className="text-sm text-theme-text-secondary">Email</Label>
                     <p className="font-medium">{user?.email}</p>
                   </div>
                 </CardContent>
@@ -143,7 +138,7 @@ export function Checkout() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-slate-600 mb-4">
+                  <p className="text-sm text-theme-text-secondary mb-4">
                     O endereço será solicitado após a confirmação do pedido
                   </p>
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -173,16 +168,16 @@ export function Checkout() {
                           <CreditCard className="h-5 w-5 text-blue-600" />
                         </div>
                         <div>
-                          <p className="font-medium text-slate-900">
+                          <p className="font-medium text-theme-text-primary">
                             Pagamento na Entrega
                           </p>
-                          <p className="text-sm text-slate-600">
+                          <p className="text-sm text-theme-text-secondary">
                             Pague com cartão, dinheiro ou Pix
                           </p>
                         </div>
                       </div>
                     </div>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-theme-text-muted">
                       * Outras formas de pagamento serão disponibilizadas em
                       breve
                     </p>
@@ -225,13 +220,13 @@ export function Checkout() {
                           className="flex justify-between text-sm"
                         >
                           <div className="flex-1">
-                            <p className="font-medium text-slate-900">{name}</p>
-                            <p className="text-slate-500">
+                            <p className="font-medium text-theme-text-primary">{name}</p>
+                            <p className="text-theme-text-muted">
                               {item.quantidade}x{" "}
                               {formatPrice(item.preco_unitario)}
                             </p>
                           </div>
-                          <p className="font-medium text-slate-900">
+                          <p className="font-medium text-theme-text-primary">
                             {formatPrice(item.subtotal)}
                           </p>
                         </div>
@@ -240,16 +235,16 @@ export function Checkout() {
                   </div>
 
                   <div className="border-t pt-4 space-y-2">
-                    <div className="flex justify-between text-slate-600">
+                    <div className="flex justify-between text-theme-text-secondary">
                       <span>Subtotal ({cart.totalItems} itens)</span>
                       <span>{formatPrice(cart.totalPrice)}</span>
                     </div>
-                    <div className="flex justify-between text-slate-600">
+                    <div className="flex justify-between text-theme-text-secondary">
                       <span>Frete</span>
                       <span className="text-green-600 font-medium">Grátis</span>
                     </div>
                     <div className="border-t pt-2">
-                      <div className="flex justify-between text-lg font-bold text-slate-900">
+                      <div className="flex justify-between text-lg font-bold text-theme-text-primary">
                         <span>Total</span>
                         <span>{formatPrice(cart.totalPrice)}</span>
                       </div>
@@ -275,7 +270,7 @@ export function Checkout() {
                     )}
                   </Button>
 
-                  <div className="bg-slate-50 rounded-lg p-4 text-sm text-slate-600">
+                  <div className="bg-theme-surface rounded-lg p-4 text-sm text-theme-text-secondary">
                     <p className="font-medium mb-1">Segurança</p>
                     <p className="text-xs">
                       Seus dados estão protegidos e sua compra é 100% segura
@@ -286,9 +281,6 @@ export function Checkout() {
             </div>
           </div>
         </div>
-      </div>
-
-      <Footer />
     </div>
   );
 }

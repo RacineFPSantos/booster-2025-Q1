@@ -4,9 +4,24 @@ TODO:
 - auth.types.ts entender o erro
 - Adicionar Validação CPF / CNPJ na criação momento BACKEND
 - Area serviços Backend
+- Quando clica confirmar agendamento ele vai para tela de home
 
 DONE:
 - Feito Validação CPF / CNPJ na criação momento FRONTEND
+- [IA] Busca por intenção com filtro source_type + limite RAG_TOP_K=10
+- [IA] Campos sensíveis sanitizados antes de injetar no prompt
+- [IA] Cache 60s in-memory das queries RAG (chave: mensagem+intenção)
+- [IA] Fallback [SEM CONTEXTO ESPECÍFICO] no prompt quando RAG retorna vazio
+- [IA] System prompt ajustado para uso de contexto injetado (v1.1.3)
+- [IA] Dados proibidos definidos: IDs, margens, estoque exato, preços promocionais, dados de clientes
+- [IA] Endpoint público /ai/public/chat sem JWT (rate limit 10 req/min por IP)
+- [IA] Chat aberto sem login — login contextual apenas para ações protegidas
+- [IA] Fluxo de identificação do veículo com extração inteligente (ano + modelo)
+- [IA] Detecção de carro sem ano → pergunta o ano e re-envia a query original
+- [IA] Atalhos contextuais por intenção: product_recommendation e service_inquiry
+- [IA] Categorias e tipos de serviço carregados do banco para filtros
+- [IA] Navegação direta /pecas?categoria=X e /servicos?tipo=X
+- [IA] Consultor redireciona para /contato
 
 /* Informações */
 https://backend-booster-1012930723332.southamerica-east1.run.app

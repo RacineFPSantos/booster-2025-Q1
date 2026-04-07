@@ -9,7 +9,7 @@ function StatItem({ value, label }: StatItemProps) {
       <div className="text-3xl md:text-4xl font-bold text-blue-600">
         {value}
       </div>
-      <div className="text-sm text-slate-600">{label}</div>
+      <div className="text-sm text-theme-text-secondary">{label}</div>
     </div>
   );
 }

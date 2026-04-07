@@ -1,7 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -30,7 +28,7 @@ function CartItemImage({ imagemUrl, nome }: { imagemUrl?: string; nome?: string 
     );
   }
   return (
-    <div className="w-24 h-24 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
+    <div className="w-24 h-24 bg-theme-surface rounded-lg flex items-center justify-center flex-shrink-0">
       <Package className="h-10 w-10 text-slate-400" />
     </div>
   );
@@ -56,12 +54,9 @@ export function Cart() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Header />
-
-      <div className="flex-1">
+    <div className="flex-1">
         {/* Header */}
-        <div className="bg-white border-b">
+        <div className="bg-theme-bg border-b border-theme-border">
           <div className="container mx-auto px-4 py-6">
             <div className="flex items-center gap-4">
               <Button
@@ -74,11 +69,11 @@ export function Cart() {
                 Voltar
               </Button>
               <div>
-                <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
+                <h1 className="text-3xl font-bold text-theme-text-primary flex items-center gap-3">
                   <ShoppingCart className="h-8 w-8" />
                   Meu Carrinho
                 </h1>
-                <p className="text-slate-600 mt-1">
+                <p className="text-theme-text-secondary mt-1">
                   {cart.totalItems === 0
                     ? "Seu carrinho está vazio"
                     : `${cart.totalItems} ${cart.totalItems === 1 ? "item" : "itens"} no carrinho`}
@@ -94,10 +89,10 @@ export function Cart() {
             // Carrinho vazio
             <div className="text-center py-16">
               <Package className="h-24 w-24 text-slate-300 mx-auto mb-6" />
-              <h2 className="text-2xl font-semibold text-slate-700 mb-3">
+              <h2 className="text-2xl font-semibold text-theme-text-secondary mb-3">
                 Seu carrinho está vazio
               </h2>
-              <p className="text-slate-500 mb-6">
+              <p className="text-theme-text-muted mb-6">
                 Adicione produtos ou serviços para continuar comprando
               </p>
               <div className="flex gap-4 justify-center">
@@ -120,7 +115,7 @@ export function Cart() {
               <div className="lg:col-span-2 space-y-4">
                 {/* Botão limpar carrinho */}
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-slate-900">
+                  <h2 className="text-xl font-semibold text-theme-text-primary">
                     Items no carrinho
                   </h2>
                   <Button
@@ -151,10 +146,10 @@ export function Cart() {
                           <div className="flex-1 min-w-0">
                             <div className="flex justify-between items-start gap-4 mb-2">
                               <div>
-                                <h3 className="font-semibold text-slate-900 mb-1">
+                                <h3 className="font-semibold text-theme-text-primary mb-1">
                                   {name}
                                 </h3>
-                                <p className="text-sm text-slate-600 line-clamp-2">
+                                <p className="text-sm text-theme-text-secondary line-clamp-2">
                                   {description}
                                 </p>
                                 <span className="inline-block mt-2 text-xs font-medium px-2 py-1 rounded bg-blue-100 text-blue-700">
@@ -176,7 +171,7 @@ export function Cart() {
                             {/* Controles de quantidade e preço */}
                             <div className="flex items-center justify-between mt-4">
                               <div className="flex items-center gap-3">
-                                <span className="text-sm text-slate-600">
+                                <span className="text-sm text-theme-text-secondary">
                                   Quantidade:
                                 </span>
                                 <div className="flex items-center border rounded-lg">
@@ -213,10 +208,10 @@ export function Cart() {
                               </div>
 
                               <div className="text-right">
-                                <div className="text-xs text-slate-500">
+                                <div className="text-xs text-theme-text-muted">
                                   {formatPrice(item.preco_unitario)} cada
                                 </div>
-                                <div className="text-lg font-bold text-slate-900">
+                                <div className="text-lg font-bold text-theme-text-primary">
                                   {formatPrice(item.subtotal)}
                                 </div>
                               </div>
@@ -233,21 +228,21 @@ export function Cart() {
               <div className="lg:col-span-1">
                 <Card className="sticky top-4">
                   <CardContent className="p-6">
-                    <h2 className="text-xl font-semibold text-slate-900 mb-4">
+                    <h2 className="text-xl font-semibold text-theme-text-primary mb-4">
                       Resumo do Pedido
                     </h2>
 
                     <div className="space-y-3 mb-6">
-                      <div className="flex justify-between text-slate-600">
+                      <div className="flex justify-between text-theme-text-secondary">
                         <span>Subtotal ({cart.totalItems} itens)</span>
                         <span>{formatPrice(cart.totalPrice)}</span>
                       </div>
-                      <div className="flex justify-between text-slate-600">
+                      <div className="flex justify-between text-theme-text-secondary">
                         <span>Frete</span>
                         <span className="text-green-600">Grátis</span>
                       </div>
                       <div className="border-t pt-3">
-                        <div className="flex justify-between text-lg font-bold text-slate-900">
+                        <div className="flex justify-between text-lg font-bold text-theme-text-primary">
                           <span>Total</span>
                           <span>{formatPrice(cart.totalPrice)}</span>
                         </div>
@@ -282,9 +277,6 @@ export function Cart() {
             </div>
           )}
         </div>
-      </div>
-
-      <Footer />
     </div>
   );
 }

@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { OrderStatusBadge } from "@/components/orders/OrderStatusBadge";
@@ -84,39 +82,28 @@ export function OrderDetails() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col">
-        <Header />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto mb-4" />
-            <p className="text-slate-600">Carregando pedido...</p>
-          </div>
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto mb-4" />
+          <p className="text-theme-text-secondary">Carregando pedido...</p>
         </div>
-        <Footer />
       </div>
     );
   }
 
   if (!pedido) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col">
-        <Header />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <AlertCircle className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-            <p className="text-slate-600">Pedido não encontrado</p>
-          </div>
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center">
+          <AlertCircle className="h-12 w-12 text-theme-text-muted mx-auto mb-4" />
+          <p className="text-theme-text-secondary">Pedido não encontrado</p>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Header />
-
-      <div className="flex-1">
+    <div className="flex-1">
         <div className="container mx-auto px-4 py-8">
           {/* Back button */}
           <Button
@@ -131,11 +118,11 @@ export function OrderDetails() {
           <div className="max-w-4xl mx-auto">
             {/* Page Header */}
             <div className="mb-6">
-              <h1 className="text-3xl font-bold text-slate-900 mb-2">
+              <h1 className="text-3xl font-bold text-theme-text-primary mb-2">
                 Pedido #{pedido.id_pedido.toString().padStart(6, "0")}
               </h1>
               <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                <div className="flex items-center gap-2 text-slate-600">
+                <div className="flex items-center gap-2 text-theme-text-secondary">
                   <Calendar className="h-4 w-4" />
                   <span>{formatDate(pedido.data_hora)}</span>
                 </div>
@@ -154,10 +141,10 @@ export function OrderDetails() {
                       </div>
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                      <h3 className="text-lg font-semibold text-theme-text-primary mb-2">
                         Cancelar Pedido?
                       </h3>
-                      <p className="text-slate-600 mb-4">
+                      <p className="text-theme-text-secondary mb-4">
                         Tem certeza que deseja cancelar este pedido? Esta ação
                         não pode ser desfeita.
                       </p>
@@ -189,7 +176,7 @@ export function OrderDetails() {
             {/* Order Summary */}
             <Card className="mb-6">
               <CardContent className="p-6">
-                <h2 className="text-xl font-semibold text-slate-900 mb-4">
+                <h2 className="text-xl font-semibold text-theme-text-primary mb-4">
                   Resumo do Pedido
                 </h2>
 
@@ -197,7 +184,7 @@ export function OrderDetails() {
                   {/* Items */}
                   {pedido.items && pedido.items.length > 0 && (
                     <div>
-                      <div className="flex items-center gap-2 text-sm text-slate-600 mb-3">
+                      <div className="flex items-center gap-2 text-sm text-theme-text-secondary mb-3">
                         <ShoppingBag className="h-4 w-4" />
                         <span>Itens do Pedido</span>
                       </div>
@@ -205,21 +192,21 @@ export function OrderDetails() {
                         {pedido.items.map((item, index) => (
                           <div
                             key={index}
-                            className="flex justify-between items-start p-4 bg-slate-50 rounded-lg"
+                            className="flex justify-between items-start p-4 bg-theme-surface rounded-lg"
                           >
                             <div className="flex-1">
-                              <p className="font-medium text-slate-900 mb-1">
+                              <p className="font-medium text-theme-text-primary mb-1">
                                 {item.id_produto
                                   ? `Produto #${item.id_produto}`
                                   : `Serviço #${item.id_servico}`}
                               </p>
-                              <p className="text-sm text-slate-600">
+                              <p className="text-sm text-theme-text-secondary">
                                 Quantidade: {item.quantidade}x{" "}
                                 {formatPrice(item.preco_unitario)}
                               </p>
                             </div>
                             <div className="text-right">
-                              <p className="font-semibold text-slate-900">
+                              <p className="font-semibold text-theme-text-primary">
                                 {formatPrice(
                                   item.preco_unitario * item.quantidade,
                                 )}
@@ -234,7 +221,7 @@ export function OrderDetails() {
                   {/* Total */}
                   <div className="pt-4 border-t">
                     <div className="flex justify-between items-center">
-                      <span className="text-lg font-semibold text-slate-900">
+                      <span className="text-lg font-semibold text-theme-text-primary">
                         Valor Total
                       </span>
                       <span className="text-2xl font-bold text-blue-600">
@@ -249,7 +236,7 @@ export function OrderDetails() {
             {/* Status Timeline */}
             <Card className="mb-6">
               <CardContent className="p-6">
-                <h2 className="text-xl font-semibold text-slate-900 mb-4">
+                <h2 className="text-xl font-semibold text-theme-text-primary mb-4">
                   Status do Pedido
                 </h2>
 
@@ -263,7 +250,7 @@ export function OrderDetails() {
                       }`}
                     />
                     <div className="flex-1">
-                      <p className="font-medium text-slate-900">
+                      <p className="font-medium text-theme-text-primary">
                         {pedido.status === StatusPedidoEnum.PENDENTE &&
                           "Pedido Recebido"}
                         {pedido.status === StatusPedidoEnum.CONFIRMADO &&
@@ -275,7 +262,7 @@ export function OrderDetails() {
                         {pedido.status === StatusPedidoEnum.CANCELADO &&
                           "Pedido Cancelado"}
                       </p>
-                      <p className="text-sm text-slate-600">
+                      <p className="text-sm text-theme-text-secondary">
                         {formatDate(pedido.data_hora)}
                       </p>
                     </div>
@@ -284,22 +271,22 @@ export function OrderDetails() {
                   {pedido.status !== StatusPedidoEnum.CANCELADO && (
                     <>
                       {pedido.status === StatusPedidoEnum.PENDENTE && (
-                        <div className="text-sm text-slate-600 pl-7">
+                        <div className="text-sm text-theme-text-secondary pl-7">
                           Aguardando confirmação da equipe
                         </div>
                       )}
                       {pedido.status === StatusPedidoEnum.CONFIRMADO && (
-                        <div className="text-sm text-slate-600 pl-7">
+                        <div className="text-sm text-theme-text-secondary pl-7">
                           Seu pedido está sendo preparado para envio
                         </div>
                       )}
                       {pedido.status === StatusPedidoEnum.ENVIADO && (
-                        <div className="text-sm text-slate-600 pl-7">
+                        <div className="text-sm text-theme-text-secondary pl-7">
                           Seu pedido está a caminho
                         </div>
                       )}
                       {pedido.status === StatusPedidoEnum.ENTREGUE && (
-                        <div className="text-sm text-slate-600 pl-7">
+                        <div className="text-sm text-theme-text-secondary pl-7">
                           Pedido entregue com sucesso!
                         </div>
                       )}
@@ -331,9 +318,6 @@ export function OrderDetails() {
             </div>
           </div>
         </div>
-      </div>
-
-      <Footer />
     </div>
   );
 }

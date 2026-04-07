@@ -17,7 +17,9 @@ import { AdminPedidos } from "./pages/admin/AdminPedidos";
 import { AdminUsuarios } from "./pages/admin/AdminUsuarios";
 import { AdminConfiguracoes } from "./pages/admin/AdminConfiguracoes";
 import { AdminChat } from "./pages/admin/AdminChat";
+import { PublicLayout } from "./components/layout/PublicLayout";
 import { Toaster } from "./components/ui/sonner";
+import { AiChatWidget } from "./components/ai/AiChatWidget";
 import "./App.css";
 
 // Componente para rotas que exigem apenas autenticação
@@ -79,46 +81,46 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 function AppRoutes() {
   return (
     <Routes>
-      {/* Rotas públicas */}
-      <Route path="/" element={<Home />} />
-      <Route path="/pecas" element={<Pecas />} />
-      <Route path="/servicos" element={<Servicos />} />
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/contato" element={<Contato />} />
-
-      {/* Rotas que exigem autenticação */}
-      <Route
-        path="/checkout"
-        element={
-          <ProtectedRoute>
-            <Checkout />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/order-confirmation/:orderId"
-        element={
-          <ProtectedRoute>
-            <OrderConfirmation />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/orders"
-        element={
-          <ProtectedRoute>
-            <Orders />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/orders/:orderId"
-        element={
-          <ProtectedRoute>
-            <OrderDetails />
-          </ProtectedRoute>
-        }
-      />
+      {/* Rotas públicas com layout compartilhado */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/pecas" element={<Pecas />} />
+        <Route path="/servicos" element={<Servicos />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/contato" element={<Contato />} />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/order-confirmation/:orderId"
+          element={
+            <ProtectedRoute>
+              <OrderConfirmation />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <Orders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders/:orderId"
+          element={
+            <ProtectedRoute>
+              <OrderDetails />
+            </ProtectedRoute>
+          }
+        />
+      </Route>
 
       {/* Rotas de Admin */}
       <Route
@@ -189,6 +191,7 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <AppRoutes />
+          <AiChatWidget />
           <Toaster position="top-right" expand={true} richColors closeButton />
         </CartProvider>
       </AuthProvider>

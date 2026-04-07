@@ -148,6 +148,18 @@ npm run build   # Build de produção
 npm run preview # Preview do build
 ```
 
+### GENKIT
+
+com ele você consegue ver quais os modelos disponiveis
+
+```bash
+(curl "https://generativelanguage.googleapis.com/v1beta/models?key=Chave-Projeto").Content | ConvertFrom-Json | Select-Object -ExpandProperty models | Where-Object { $_.name -match "embedding" } | Select-Object name, displayName, supportedGenerationMethods
+```
+
+
+
+
+
 ---
 
 ## Stack

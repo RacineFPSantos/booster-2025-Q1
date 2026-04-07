@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { OrderCard } from "@/components/orders/OrderCard";
 import { PedidoService } from "@/services/pedidoService";
 import { Pedido, StatusPedidoEnum } from "@/types/pedido.types";
@@ -72,47 +70,40 @@ export function Orders() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col">
-        <Header />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto mb-4" />
-            <p className="text-slate-600">Carregando seus pedidos...</p>
-          </div>
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto mb-4" />
+          <p className="text-theme-text-secondary">Carregando seus pedidos...</p>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Header />
-
-      <div className="flex-1">
+    <div className="flex-1">
         <div className="container mx-auto px-4 py-8">
           {/* Page Header */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-2">
               <Package className="h-8 w-8 text-blue-600" />
-              <h1 className="text-3xl font-bold text-slate-900">
+              <h1 className="text-3xl font-bold text-theme-text-primary">
                 Meus Pedidos
               </h1>
             </div>
-            <p className="text-slate-600">
+            <p className="text-theme-text-secondary">
               Acompanhe o histórico e status dos seus pedidos
             </p>
           </div>
 
           {pedidos.length === 0 ? (
             <div className="text-center py-16">
-              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-100 mb-4">
-                <ShoppingBag className="h-10 w-10 text-slate-400" />
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-theme-surface mb-4">
+                <ShoppingBag className="h-10 w-10 text-theme-text-muted" />
               </div>
-              <h2 className="text-2xl font-semibold text-slate-900 mb-2">
+              <h2 className="text-2xl font-semibold text-theme-text-primary mb-2">
                 Nenhum pedido encontrado
               </h2>
-              <p className="text-slate-600 mb-6">
+              <p className="text-theme-text-secondary mb-6">
                 Você ainda não fez nenhum pedido. Que tal começar agora?
               </p>
               <Button size="lg" onClick={() => navigate("/pecas")}>
@@ -129,11 +120,11 @@ export function Orders() {
                     <CardTitle className="text-sm font-medium">
                       Total de Pedidos
                     </CardTitle>
-                    <Package className="h-4 w-4 text-slate-600" />
+                    <Package className="h-4 w-4 text-theme-text-secondary" />
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">{pedidos.length}</div>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-xs text-theme-text-muted mt-1">
                       R${" "}
                       {getTotalValue().toLocaleString("pt-BR", {
                         minimumFractionDigits: 2,
@@ -203,7 +194,7 @@ export function Orders() {
               <Card className="mb-6">
                 <CardContent className="pt-6">
                   <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                    <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                    <div className="flex items-center gap-2 text-sm font-medium text-theme-text-secondary">
                       <Filter className="h-4 w-4" />
                       Filtrar por status:
                     </div>
@@ -320,7 +311,7 @@ export function Orders() {
                     )}
                   </div>
 
-                  <div className="mt-4 text-sm text-slate-600">
+                  <div className="mt-4 text-sm text-theme-text-secondary">
                     {pedidosFiltrados.length === 0 ? (
                       <span>Nenhum pedido encontrado com este status</span>
                     ) : (
@@ -342,9 +333,6 @@ export function Orders() {
             </>
           )}
         </div>
-      </div>
-
-      <Footer />
     </div>
   );
 }

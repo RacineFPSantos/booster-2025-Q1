@@ -317,7 +317,7 @@ export function Cadastro() {
                       <Input
                         id="cidade"
                         name="cidade"
-                        placeholder="São Paulo"
+                        placeholder="Recife"
                         value={formData.cidade}
                         onChange={handleChange}
                         required

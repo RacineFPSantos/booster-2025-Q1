@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PedidoService } from "@/services/pedidoService";
@@ -54,24 +52,17 @@ export function OrderConfirmation() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col">
-        <Header />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto mb-4" />
-            <p className="text-slate-600">Carregando pedido...</p>
-          </div>
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto mb-4" />
+          <p className="text-theme-text-secondary">Carregando pedido...</p>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Header />
-
-      <div className="flex-1">
+    <div className="flex-1">
         <div className="container mx-auto px-4 py-12">
           <div className="max-w-2xl mx-auto">
             {/* Success Message */}
@@ -79,10 +70,10 @@ export function OrderConfirmation() {
               <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-4">
                 <CheckCircle className="h-12 w-12 text-green-600" />
               </div>
-              <h1 className="text-3xl font-bold text-slate-900 mb-2">
+              <h1 className="text-3xl font-bold text-theme-text-primary mb-2">
                 Pedido Confirmado!
               </h1>
-              <p className="text-slate-600">
+              <p className="text-theme-text-secondary">
                 Seu pedido foi recebido e está sendo processado
               </p>
             </div>
@@ -96,16 +87,16 @@ export function OrderConfirmation() {
                     <div className="pb-4 border-b">
                       <div className="flex justify-between items-start">
                         <div>
-                          <p className="text-sm text-slate-600 mb-1">
+                          <p className="text-sm text-theme-text-secondary mb-1">
                             Número do Pedido
                           </p>
-                          <p className="text-2xl font-bold text-slate-900">
+                          <p className="text-2xl font-bold text-theme-text-primary">
                             #{pedido.id_pedido.toString().padStart(6, "0")}
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-sm text-slate-600 mb-1">Data</p>
-                          <p className="font-medium text-slate-900">
+                          <p className="text-sm text-theme-text-secondary mb-1">Data</p>
+                          <p className="font-medium text-theme-text-primary">
                             {formatDate(pedido.data_hora)}
                           </p>
                         </div>
@@ -116,10 +107,10 @@ export function OrderConfirmation() {
                     <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-lg">
                       <Package className="h-5 w-5 text-blue-600" />
                       <div>
-                        <p className="font-medium text-slate-900">
+                        <p className="font-medium text-theme-text-primary">
                           Status: {pedido.status}
                         </p>
-                        <p className="text-sm text-slate-600">
+                        <p className="text-sm text-theme-text-secondary">
                           Entraremos em contato em breve
                         </p>
                       </div>
@@ -128,7 +119,7 @@ export function OrderConfirmation() {
                     {/* Total */}
                     <div className="pt-4 border-t">
                       <div className="flex justify-between items-center">
-                        <span className="text-lg font-medium text-slate-900">
+                        <span className="text-lg font-medium text-theme-text-primary">
                           Valor Total
                         </span>
                         <span className="text-2xl font-bold text-blue-600">
@@ -140,7 +131,7 @@ export function OrderConfirmation() {
                     {/* Items */}
                     {pedido.items && pedido.items.length > 0 && (
                       <div className="pt-4 border-t">
-                        <p className="font-medium text-slate-900 mb-3">
+                        <p className="font-medium text-theme-text-primary mb-3">
                           Itens do Pedido
                         </p>
                         <div className="space-y-2">
@@ -149,12 +140,12 @@ export function OrderConfirmation() {
                               key={index}
                               className="flex justify-between text-sm"
                             >
-                              <span className="text-slate-600">
+                              <span className="text-theme-text-secondary">
                                 {item.quantidade}x{" "}
                                 {item.id_produto ? "Produto" : "Serviço"} #
                                 {item.id_produto || item.id_servico}
                               </span>
-                              <span className="font-medium text-slate-900">
+                              <span className="font-medium text-theme-text-primary">
                                 {formatPrice(
                                   item.preco_unitario * item.quantidade,
                                 )}
@@ -172,10 +163,10 @@ export function OrderConfirmation() {
             {/* Information */}
             <Card className="mb-6">
               <CardContent className="p-6">
-                <h3 className="font-semibold text-slate-900 mb-3">
+                <h3 className="font-semibold text-theme-text-primary mb-3">
                   Próximos Passos
                 </h3>
-                <ol className="space-y-3 text-sm text-slate-600">
+                <ol className="space-y-3 text-sm text-theme-text-secondary">
                   <li className="flex gap-2">
                     <span className="font-bold text-blue-600 min-w-[20px]">
                       1.
@@ -237,7 +228,7 @@ export function OrderConfirmation() {
 
             {/* Support */}
             <div className="mt-6 text-center">
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-theme-text-secondary">
                 Dúvidas sobre seu pedido?{" "}
                 <a
                   href="#contato"
@@ -249,9 +240,6 @@ export function OrderConfirmation() {
             </div>
           </div>
         </div>
-      </div>
-
-      <Footer />
     </div>
   );
 }

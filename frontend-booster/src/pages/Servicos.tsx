@@ -10,12 +10,12 @@ import { Search, Filter, Loader2, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { ServicoService } from "@/services/servicoService";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function Servicos() {
   const [searchParams] = useSearchParams();
+  const { isAuthenticated } = useAuth();
   const [servicos, setServicos] = useState<Servico[]>([]);
   const [servicosFiltrados, setServicosFiltrados] = useState<Servico[]>([]);
   const [tiposServico, setTiposServico] = useState<TipoServico[]>([]);
@@ -23,9 +23,8 @@ export function Servicos() {
   const [busca, setBusca] = useState("");
   const [tipoFiltro, setTipoFiltro] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [servicoSelecionado, setServicoSelecionado] = useState<Servico | null>(
-    null,
-  );
+  const [servicoSelecionado, setServicoSelecionado] = useState<Servico | null>(null);
+  const [pendingServico, setPendingServico] = useState<Servico | null>(null);
 
   useEffect(() => {
     loadData();
@@ -109,7 +108,20 @@ export function Servicos() {
     setTipoFiltro("");
   };
 
+  useEffect(() => {
+    if (isAuthenticated && pendingServico) {
+      setServicoSelecionado(pendingServico);
+      setIsModalOpen(true);
+      setPendingServico(null);
+    }
+  }, [isAuthenticated, pendingServico]);
+
   const handleAgendar = (servico: Servico) => {
+    if (!isAuthenticated) {
+      setPendingServico(servico);
+      window.dispatchEvent(new CustomEvent("auth:expired"));
+      return;
+    }
     setServicoSelecionado(servico);
     setIsModalOpen(true);
   };
@@ -132,30 +144,24 @@ export function Servicos() {
 
   if (isLoading) {
     return (
-      <>
-        <Header />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <Loader2 className="h-12 w-12 animate-spin text-green-600 mx-auto mb-4" />
-            <p className="text-slate-600">Carregando serviços...</p>
-          </div>
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-brand-blue mx-auto mb-4" />
+          <p className="text-theme-text-secondary">Carregando serviços...</p>
         </div>
-        <Footer />
-      </>
+      </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Header />
-
+    <>
       {/* Header */}
-      <div className="bg-white border-b">
+      <div className="bg-theme-surface border-b border-theme-border">
         <div className="container mx-auto px-4 py-6">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">
+          <h1 className="text-3xl font-bold text-theme-text-primary mb-2">
             Nossos Serviços
             {tipoFiltro && tiposServico.length > 0 && (
-              <span className="text-green-600">
+              <span className="text-brand-blue">
                 {" "}
                 -{" "}
                 {
@@ -166,7 +172,7 @@ export function Servicos() {
               </span>
             )}
           </h1>
-          <p className="text-slate-600">
+          <p className="text-theme-text-secondary">
             {tipoFiltro
               ? "Filtrando por tipo de serviço selecionado"
               : "Agende os melhores serviços para seu veículo"}
@@ -175,13 +181,13 @@ export function Servicos() {
       </div>
 
       {/* Filtros */}
-      <div className="bg-white border-b">
+      <div className="bg-theme-surface border-b border-theme-border">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Busca */}
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-theme-text-muted" />
                 <Input
                   type="text"
                   placeholder="Buscar por serviço..."
@@ -195,7 +201,7 @@ export function Servicos() {
             {/* Filtro Tipo */}
             <div className="w-full lg:w-64">
               <select
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 bg-theme-bg border border-theme-border text-theme-text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-brand-blue transition-colors duration-300"
                 value={tipoFiltro}
                 onChange={(e) => setTipoFiltro(e.target.value)}
               >
@@ -221,7 +227,7 @@ export function Servicos() {
           </div>
 
           {/* Contador de resultados */}
-          <div className="mt-4 text-sm text-slate-600">
+          <div className="mt-4 text-sm text-theme-text-secondary">
             {servicosFiltrados.length === 0 ? (
               <span>Nenhum serviço encontrado</span>
             ) : (
@@ -240,11 +246,11 @@ export function Servicos() {
       <div className="container mx-auto px-4 py-8">
         {servicosFiltrados.length === 0 ? (
           <div className="text-center py-12">
-            <Wrench className="h-16 w-16 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-slate-700 mb-2">
+            <Wrench className="h-16 w-16 text-theme-text-muted mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-theme-text-primary mb-2">
               Nenhum serviço encontrado
             </h3>
-            <p className="text-slate-500 mb-4">
+            <p className="text-theme-text-secondary mb-4">
               Tente ajustar os filtros ou fazer uma nova busca
             </p>
             {(busca || tipoFiltro) && (
@@ -266,8 +272,6 @@ export function Servicos() {
         )}
       </div>
 
-      <Footer />
-
       {/* Modal de Agendamento */}
       <AgendamentoModal
         open={isModalOpen}
@@ -275,6 +279,6 @@ export function Servicos() {
         servico={servicoSelecionado}
         onConfirm={handleConfirmarAgendamento}
       />
-    </div>
+    </>
   );
 }

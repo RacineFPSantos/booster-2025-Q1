@@ -138,10 +138,10 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
+              <span className="w-full border-t border-theme-border" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-slate-500">
+              <span className="bg-background px-2 text-theme-text-muted">
                 Não tem uma conta?
               </span>
             </div>

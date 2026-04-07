@@ -1,77 +1,71 @@
+import { motion } from "framer-motion";
 import {
-  Package,
+  SearchIcon,
+  CalendarIcon,
+  MessageSquareIcon,
   TruckIcon,
-  Users,
-  CreditCard,
-  Award,
-  Headphones,
 } from "lucide-react";
-import { FeatureCard } from "../cards/FeatureCard";
+import { containerVariants, cardVariants } from "@/lib/animation-variants";
+
+const features = [
+  {
+    title: "Catálogo Inteligente",
+    description:
+      "Milhares de peças com busca inteligente e recomendações personalizadas para o seu veículo.",
+    icon: SearchIcon,
+  },
+  {
+    title: "Agendamento Online",
+    description:
+      "Agende serviços automotivos com horários flexíveis e confirmação instantânea.",
+    icon: CalendarIcon,
+  },
+  {
+    title: "Assistente IA 24h",
+    description:
+      "Tire dúvidas, encontre peças e receba suporte técnico a qualquer momento.",
+    icon: MessageSquareIcon,
+  },
+  {
+    title: "Entrega Expressa",
+    description:
+      "Receba suas peças com rapidez, segurança e rastreamento em tempo real.",
+    icon: TruckIcon,
+  },
+];
 
 export function FeaturesSection() {
-  const features = [
-    {
-      icon: Package,
-      title: "Peças Originais",
-      description:
-        "Trabalhamos apenas com peças certificadas e originais de fábrica",
-      gradientColors: "from-blue-500 to-blue-600",
-    },
-    {
-      icon: TruckIcon,
-      title: "Entrega Rápida",
-      description: "Entregamos em até 24h para a sua região ou retire na loja",
-      gradientColors: "from-green-500 to-green-600",
-    },
-    {
-      icon: Users,
-      title: "Atendimento Especializado",
-      description: "Equipe técnica qualificada para te ajudar na escolha certa",
-      gradientColors: "from-purple-500 to-purple-600",
-    },
-    {
-      icon: CreditCard,
-      title: "Parcele sem Juros",
-      description: "Até 12x sem juros em compras acima de R$ 500",
-      gradientColors: "from-orange-500 to-orange-600",
-    },
-    {
-      icon: Award,
-      title: "Melhor Preço",
-      description: "Garantimos o melhor preço ou devolvemos a diferença",
-      gradientColors: "from-red-500 to-red-600",
-    },
-    {
-      icon: Headphones,
-      title: "Suporte 24/7",
-      description: "Atendimento online sempre que você precisar",
-      gradientColors: "from-cyan-500 to-cyan-600",
-    },
-  ];
-
   return (
-    <section className="py-20 bg-white">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-            Por que escolher a AiCar?
-          </h2>
-          <p className="text-lg text-slate-600">
-            Tecnologia e confiança para cuidar do seu veículo
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {features.map((feature, index) => (
-            <FeatureCard
-              key={index}
-              icon={feature.icon}
-              title={feature.title}
-              description={feature.description}
-              gradientColors={feature.gradientColors}
-            />
-          ))}
-        </div>
+    <section className="py-24 bg-theme-bg relative z-10 transition-colors duration-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
+            return (
+              <motion.div
+                key={index}
+                variants={cardVariants}
+                className="bg-theme-surface border border-theme-border rounded-2xl p-8 hover:border-theme-border-hover transition-colors duration-300"
+              >
+                <div className="w-12 h-12 rounded-xl bg-brand-orange/10 flex items-center justify-center mb-6">
+                  <Icon className="w-6 h-6 text-brand-orange" />
+                </div>
+                <h3 className="text-xl font-bold text-theme-text-primary mb-3 transition-colors duration-300">
+                  {feature.title}
+                </h3>
+                <p className="text-theme-text-muted leading-relaxed text-sm transition-colors duration-300">
+                  {feature.description}
+                </p>
+              </motion.div>
+            );
+          })}
+        </motion.div>
       </div>
     </section>
   );

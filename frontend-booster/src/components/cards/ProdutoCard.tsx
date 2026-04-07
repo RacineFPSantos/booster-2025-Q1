@@ -23,7 +23,7 @@ export function ProdutoCard({ produto, onAddToCart }: ProdutoCardProps) {
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      <div className="bg-gradient-to-br from-blue-50 to-slate-50 flex items-center justify-center h-48 overflow-hidden">
+      <div className="bg-gradient-to-br from-theme-surface to-theme-elevated flex items-center justify-center h-48 overflow-hidden">
         {produto.imagem_url && !imgError ? (
           <img
             src={`${API_BASE_URL}${produto.imagem_url}`}
@@ -32,7 +32,7 @@ export function ProdutoCard({ produto, onAddToCart }: ProdutoCardProps) {
             onError={() => setImgError(true)}
           />
         ) : (
-          <Package className="h-20 w-20 text-slate-300" />
+          <Package className="h-20 w-20 text-theme-text-muted" />
         )}
       </div>
 
@@ -41,19 +41,19 @@ export function ProdutoCard({ produto, onAddToCart }: ProdutoCardProps) {
           {produto.nome}
         </h3>
 
-        <p className="text-sm text-slate-600 mb-3 line-clamp-2 min-h-[2.5rem]">
+        <p className="text-sm text-theme-text-secondary mb-3 line-clamp-2 min-h-[2.5rem]">
           {produto.descricao || "Sem descrição"}
         </p>
 
         <div className="space-y-1 text-sm">
           {produto.categoria && (
-            <p className="text-slate-500">
+            <p className="text-theme-text-muted">
               <span className="font-medium">Categoria:</span>{" "}
               {produto.categoria.nome}
             </p>
           )}
           {produto.fabricante && (
-            <p className="text-slate-500">
+            <p className="text-theme-text-muted">
               <span className="font-medium">Fabricante:</span>{" "}
               {produto.fabricante.nome}
             </p>

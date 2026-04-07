@@ -20,8 +20,8 @@ export function FeatureCard({
       >
         <Icon className="h-10 w-10 text-white" />
       </div>
-      <h3 className="text-xl font-semibold text-slate-900">{title}</h3>
-      <p className="text-slate-600">{description}</p>
+      <h3 className="text-xl font-semibold text-theme-text-primary">{title}</h3>
+      <p className="text-theme-text-secondary">{description}</p>
     </div>
   );
 }

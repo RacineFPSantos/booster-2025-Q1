@@ -1,6 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import {
   MessageCircle,
   Mail,
@@ -107,15 +105,12 @@ export function Contato() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Header />
-
-      <main className="flex-1 container mx-auto px-4 py-12">
+    <main className="flex-1 container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto text-center mb-10">
-          <h1 className="text-3xl font-bold text-slate-800">
+          <h1 className="text-3xl font-bold text-theme-text-primary">
             Como podemos ajudar?
           </h1>
-          <p className="text-slate-600 mt-2">
+          <p className="text-theme-text-secondary mt-2">
             Escolha o canal de sua preferência.
           </p>
         </div>
@@ -125,13 +120,13 @@ export function Contato() {
             {/* Card WhatsApp */}
             <button
               onClick={handleWhatsApp}
-              className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 hover:border-green-500 hover:shadow-md transition-all group"
+              className="bg-theme-elevated p-8 rounded-xl shadow-sm border border-theme-border hover:border-green-500 hover:shadow-md transition-all group"
             >
               <div className="bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-green-500 transition-colors">
                 <MessageCircle className="text-green-600 group-hover:text-white" />
               </div>
               <h3 className="font-semibold text-lg">WhatsApp</h3>
-              <p className="text-sm text-slate-500 mb-4">
+              <p className="text-sm text-theme-text-muted mb-4">
                 Resposta em instantes
               </p>
               <span className="text-blue-600 text-sm flex items-center justify-center gap-1">
@@ -140,12 +135,12 @@ export function Contato() {
             </button>
 
             {/* Card Chat */}
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
+            <div className="bg-theme-elevated p-8 rounded-xl shadow-sm border border-theme-border">
               <div className="bg-blue-100 w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <MessageSquare className="text-blue-600" />
               </div>
               <h3 className="font-semibold text-lg mb-2">Chat ao Vivo</h3>
-              <p className="text-sm text-slate-500 mb-4">
+              <p className="text-sm text-theme-text-muted mb-4">
                 Fale com um consultor
               </p>
               {isAuthenticated ? (
@@ -171,27 +166,27 @@ export function Contato() {
             {/* Card Email */}
             <button
               onClick={() => setView("email")}
-              className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 hover:border-purple-500 hover:shadow-md transition-all group"
+              className="bg-theme-elevated p-8 rounded-xl shadow-sm border border-theme-border hover:border-purple-500 hover:shadow-md transition-all group"
             >
               <div className="bg-purple-100 w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-500 transition-colors">
                 <Mail className="text-purple-600 group-hover:text-white" />
               </div>
               <h3 className="font-semibold text-lg">E-mail</h3>
-              <p className="text-sm text-slate-500 mb-4">Deixe uma mensagem</p>
+              <p className="text-sm text-theme-text-muted mb-4">Deixe uma mensagem</p>
               <span className="text-blue-600 text-sm">Enviar formulário</span>
             </button>
           </div>
         ) : view === "chat" ? (
-          <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col h-[600px]">
+          <div className="max-w-2xl mx-auto bg-theme-elevated rounded-xl shadow-sm border border-theme-border flex flex-col h-[600px]">
             {/* Header do Chat */}
-            <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+            <div className="p-4 border-b border-theme-border flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                   <MessageSquare className="text-blue-600" size={20} />
                 </div>
                 <div>
                   <h3 className="font-semibold">Chat ao Vivo</h3>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-theme-text-muted">
                     {loading ? "Carregando..." : "Online"}
                   </p>
                 </div>
@@ -201,16 +196,16 @@ export function Contato() {
                   setView("options");
                   setActiveRoomId(null);
                 }}
-                className="text-sm text-slate-600 hover:text-slate-800"
+                className="text-sm text-theme-text-secondary hover:text-theme-text-primary"
               >
                 ✕
               </button>
             </div>
 
             {/* Mensagens */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-theme-surface">
               {messages.length === 0 ? (
-                <div className="text-center text-slate-500 py-8">
+                <div className="text-center text-theme-text-muted py-8">
                   <MessageSquare
                     className="mx-auto mb-2 text-slate-400"
                     size={48}
@@ -223,7 +218,7 @@ export function Contato() {
                   if (msg.sender_id === "system") {
                     return (
                       <div key={msg.id} className="flex justify-center">
-                        <div className="bg-slate-200 text-slate-600 px-4 py-2 rounded-full text-xs italic">
+                        <div className="bg-theme-surface-light text-theme-text-secondary px-4 py-2 rounded-full text-xs italic">
                           {msg.content}
                         </div>
                       </div>
@@ -244,7 +239,7 @@ export function Contato() {
                         className={`max-w-[70%] rounded-lg px-4 py-2 ${
                           msg.sender_id === myId
                             ? "bg-blue-600 text-white"
-                            : "bg-white border border-slate-200 text-slate-800"
+                            : "bg-theme-elevated border border-theme-border text-theme-text-primary"
                         }`}
                       >
                         <p className="text-sm">{msg.content}</p>
@@ -252,7 +247,7 @@ export function Contato() {
                           className={`text-xs mt-1 ${
                             msg.sender_id === myId
                               ? "text-blue-100"
-                              : "text-slate-500"
+                              : "text-theme-text-muted"
                           }`}
                         >
                           {new Date(msg.created_at).toLocaleTimeString(
@@ -274,7 +269,7 @@ export function Contato() {
             {/* Input de Mensagem */}
             <form
               onSubmit={handleSendMessage}
-              className="p-4 border-t border-slate-200"
+              className="p-4 border-t border-theme-border"
             >
               <div className="flex gap-2">
                 <input
@@ -287,7 +282,7 @@ export function Contato() {
                       : "Digite sua mensagem..."
                   }
                   disabled={roomStatus === "closed"}
-                  className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-slate-100 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 border border-theme-border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-slate-100 disabled:cursor-not-allowed"
                 />
                 <button
                   type="submit"
@@ -314,7 +309,7 @@ export function Contato() {
             </form>
           </div>
         ) : (
-          <div className="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-sm border border-slate-200">
+          <div className="max-w-xl mx-auto bg-theme-elevated p-8 rounded-xl shadow-sm border border-theme-border">
             <button
               onClick={() => setView("options")}
               className="text-sm text-blue-600 hover:underline mb-6 flex items-center gap-2"
@@ -328,42 +323,42 @@ export function Contato() {
               <div>
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-theme-text-secondary"
                 >
                   Nome
                 </label>
                 <input
                   type="text"
                   id="name"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 block w-full border border-theme-border rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Digite seu nome"
                 />
               </div>
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-theme-text-secondary"
                 >
                   Email
                 </label>
                 <input
                   type="email"
                   id="email"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 block w-full border border-theme-border rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Digite seu email"
                 />
               </div>
               <div>
                 <label
                   htmlFor="message"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-theme-text-secondary"
                 >
                   Mensagem
                 </label>
                 <textarea
                   id="message"
                   rows={4}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 block w-full border border-theme-border rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Como podemos ajudar?"
                 />
               </div>
@@ -376,9 +371,6 @@ export function Contato() {
             </form>
           </div>
         )}
-      </main>
-
-      <Footer />
-    </div>
+    </main>
   );
 }

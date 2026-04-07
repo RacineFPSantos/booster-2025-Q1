@@ -1,6 +1,8 @@
 import { Wrench, CheckCircle2, Clock, Shield } from "lucide-react";
 import { Button } from "../ui/button";
 import { ServiceCard } from "../cards/ServiceCard";
+import { motion } from "framer-motion";
+import { containerVariants, cardVariants } from "@/lib/animation-variants";
 
 export function ServicesSection() {
   const services = [
@@ -35,35 +37,48 @@ export function ServicesSection() {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
+    <section className="py-20 bg-theme-surface">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-theme-text-primary mb-4">
             Oficina Completa
           </h2>
-          <p className="text-lg text-slate-600">
+          <p className="text-lg text-theme-text-secondary">
             Serviços especializados com equipamentos de ponta
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"
+        >
           {services.map((service, index) => (
-            <ServiceCard
-              key={index}
-              icon={service.icon}
-              title={service.title}
-              description={service.description}
-              iconColor={service.iconColor}
-              iconBgColor={service.iconBgColor}
-            />
+            <motion.div key={index} variants={cardVariants}>
+              <ServiceCard
+                icon={service.icon}
+                title={service.title}
+                description={service.description}
+                iconColor={service.iconColor}
+                iconBgColor={service.iconBgColor}
+              />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        <div className="text-center mt-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="text-center mt-12"
+        >
           <Button size="lg" className="h-12 px-8">
             Agendar Serviço Agora
           </Button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

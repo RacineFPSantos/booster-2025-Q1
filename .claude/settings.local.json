@@ -3,7 +3,10 @@
     "allow": [
       "mcp__acp__Bash",
       "mcp__acp__Edit",
-      "mcp__acp__Write"
+      "mcp__acp__Write",
+      "Bash(npm install genkit @genkit-ai/googleai @nestjs/throttler)",
+      "Bash(node -e \"const g = require\\(''''genkit''''\\); console.log\\(''''genkit ok''''\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d[''''version'''']\\)\")"
     ]
   }
 }
