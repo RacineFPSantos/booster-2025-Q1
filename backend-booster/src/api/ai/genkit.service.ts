@@ -58,7 +58,12 @@ export class GenkitService implements OnModuleInit {
   constructor(private readonly configService: ConfigService) {}
 
   onModuleInit() {
-    const apiKey = this.configService.getOrThrow<string>('GOOGLE_GENAI_API_KEY');
+    const apiKey = this.configService.get<string>('GOOGLE_GENAI_API_KEY');
+    if (!apiKey) {
+      this.logger.warn('GOOGLE_GENAI_API_KEY não configurada — funcionalidades de IA desativadas');
+      return;
+    }
+
     this.ai = genkit({ plugins: [googleAI({ apiKey })] });
     this.googleAiClient = new GoogleGenerativeAI(apiKey);
 
@@ -108,6 +113,7 @@ export class GenkitService implements OnModuleInit {
   }
 
   async embedText(text: string): Promise<number[]> {
+    if (!this.googleAiClient) throw new Error('GOOGLE_GENAI_API_KEY não configurada');
     const model = this.googleAiClient.getGenerativeModel(
       { model: 'gemini-embedding-001' },
       { apiVersion: 'v1beta' },
@@ -124,6 +130,14 @@ export class GenkitService implements OnModuleInit {
     context?: string,
     intent?: string,
   ): Promise<GenkitFlowResult> {
+    if (!this.automotiveChatFlow) {
+      return {
+        responseText: FALLBACK_SAFETY,
+        modelUsed: MODEL,
+        systemPromptVersion: SYSTEM_PROMPT_VERSION,
+        wasFiltered: true,
+      };
+    }
     try {
       return await this.automotiveChatFlow({ userMessage, context, intent });
     } catch (error) {
