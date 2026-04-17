@@ -15,7 +15,7 @@ const isDev = process.env.NODE_ENV !== 'production';
         const sharedOptions = {
           autoLoadEntities: true,
           synchronize: false,
-          migrations: ['dist/core/database/migrations/*.js'],
+          migrations: [],
           migrationsRun: false,
           retryAttempts: 3,
           retryDelay: 1000,

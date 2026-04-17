@@ -6,9 +6,9 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
  */
 export class SeedServicos1800000000002 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const [{ count }] = await queryRunner.query<[{ count: string }]>(`
+    const [{ count }] = (await queryRunner.query(`
       SELECT COUNT(*)::int AS count FROM servico
-    `);
+    `)) as Array<{ count: string }>;
 
     if (Number(count) > 0) {
       return;

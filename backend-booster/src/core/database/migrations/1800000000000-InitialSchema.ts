@@ -6,12 +6,12 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
  */
 export class InitialSchema1800000000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const [{ exists: baselineExists }] = await queryRunner.query<[{ exists: boolean }]>(`
+    const [{ exists: baselineExists }] = (await queryRunner.query(`
       SELECT (
         to_regclass('public.usuario') IS NOT NULL
         AND to_regclass('public.servico') IS NOT NULL
       ) AS exists
-    `);
+    `)) as Array<{ exists: boolean }>;
 
     if (baselineExists) {
       return;

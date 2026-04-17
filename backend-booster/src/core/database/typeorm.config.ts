@@ -11,7 +11,7 @@ export const AppDataSource = new DataSource(
         type: 'postgres',
         url: process.env.DATABASE_URL,
         entities: ['src/**/*.entity.{ts,js}'],
-        migrations: ['src/core/database/migrations/*.{ts,js}'],
+        migrations: [],
         synchronize: false, // SEMPRE false em produção
         ssl: {
           rejectUnauthorized: false, // Necessário para Supabase
@@ -25,7 +25,7 @@ export const AppDataSource = new DataSource(
         password: process.env.POSTGRES_PASSWORD,
         database: process.env.POSTGRES_DB,
         entities: ['src/**/*.entity.{ts,js}'],
-        migrations: ['src/core/database/migrations/*.{ts,js}'],
+        migrations: [],
         synchronize: false, // SEMPRE false em produção
       },
 );
