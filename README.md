@@ -70,6 +70,26 @@ PORT=3000
 
 > Para usar o Supabase no lugar do banco local, consulte o `DEPLOYMENT_GUIDE.md`.
 
+### Schema oficial do Supabase
+
+Em produção, o Supabase é mantido manualmente pelo SQL Editor. O schema atual
+compatível com o backend NestJS fica em:
+
+```text
+backend-booster/sql/supabase-schema-current.sql
+```
+
+Para popular dados iniciais sem depender da tabela antiga `estoque`, use:
+
+```text
+backend-booster/sql/supabase-seed-current.sql
+```
+
+Evite usar como fonte principal os arquivos antigos `booster_schema_supabase.sql`,
+`user_table_supabase.sql`, `backend-booster/sql/create-pedido-tables.sql` e
+`backend-booster/sql/create-cart-tables.sql`, porque eles refletem versões
+anteriores do modelo de dados.
+
 ### 4. Instalar dependências e rodar as migrations
 
 ```bash
