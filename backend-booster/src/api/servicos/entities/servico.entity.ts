@@ -34,7 +34,7 @@ export class Servico {
   @Column({ name: 'id_tipo_servico', type: 'int', nullable: false })
   id_tipo_servico: number;
 
-  @ManyToOne(() => TipoServico, (tipo) => tipo.servicos, { nullable: false })
+  @ManyToOne(() => TipoServico, (tipo) => tipo.servicos, { nullable: false, onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'id_tipo_servico' })
   tipo_servico: TipoServico;
 

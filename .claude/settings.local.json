@@ -6,7 +6,15 @@
       "mcp__acp__Write",
       "Bash(npm install genkit @genkit-ai/googleai @nestjs/throttler)",
       "Bash(node -e \"const g = require\\(''''genkit''''\\); console.log\\(''''genkit ok''''\\)\")",
-      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d[''''version'''']\\)\")"
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d[''''version'''']\\)\")",
+      "Bash(npm install:*)",
+      "Bash(node -e \"const p = require\\('./node_modules/@nestjs/cache-manager/package.json'\\); console.log\\(p.version\\)\")",
+      "Bash(node -e \"const p = require\\('./node_modules/cache-manager/package.json'\\); console.log\\(p.version\\)\")",
+      "Bash(node -e \"const p = require\\('./node_modules/cache-manager-ioredis-yet/package.json'\\); console.log\\(p.version\\)\")",
+      "Bash(node -e \"const p = require\\('./node_modules/@keyv/redis/package.json'\\); console.log\\(p.version\\)\")",
+      "Bash(node -e \"const p = require\\('./node_modules/@keyv/redis/package.json'\\); console.log\\(p.version, Object.keys\\(p.exports || {}\\).slice\\(0,3\\)\\)\")",
+      "Bash(grep -E \"\\\\.tsx$\")",
+      "Bash(npm list *)"
     ]
   }
 }

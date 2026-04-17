@@ -7,6 +7,7 @@ import {
   Param,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
 import { PedidoService } from './pedido.service';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
@@ -37,7 +38,16 @@ export class PedidoController {
   @Get('admin/all')
   @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
-  async findAll() {
+  async findAll(
+    @Query('cursor') cursor?: string,
+    @Query('limit') limit?: string,
+  ) {
+    if (cursor !== undefined || limit !== undefined) {
+      return this.pedidoService.findAllPaginated(
+        limit ? Math.min(parseInt(limit), 100) : 20,
+        cursor,
+      );
+    }
     return this.pedidoService.findAll();
   }
 
@@ -46,7 +56,18 @@ export class PedidoController {
    * Busca todos os pedidos do usuário autenticado
    */
   @Get('my-orders')
-  async findMyOrders(@Request() req) {
+  async findMyOrders(
+    @Request() req,
+    @Query('cursor') cursor?: string,
+    @Query('limit') limit?: string,
+  ) {
+    if (cursor !== undefined || limit !== undefined) {
+      return this.pedidoService.findMyOrdersPaginated(
+        req.user.id,
+        limit ? Math.min(parseInt(limit), 100) : 20,
+        cursor,
+      );
+    }
     return this.pedidoService.findMyOrders(req.user.id);
   }
 

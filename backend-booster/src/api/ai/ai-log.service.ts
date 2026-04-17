@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AiInteractionLog } from './entities/ai-interaction-log.entity';
+import { User } from '../users/entities/user.entity';
 
 export interface CreateAiLogDto {
   userId?: number | null;
@@ -29,7 +30,7 @@ export class AiLogService {
 
   async persist(data: CreateAiLogDto): Promise<void> {
     const log = this.repo.create({
-      user_id: data.userId ?? null,
+      user: data.userId ? ({ id_usuario: data.userId } as User) : null,
       session_id: data.sessionId ?? null,
       prompt_text: data.promptText,
       system_prompt_version: data.systemPromptVersion,
@@ -49,7 +50,7 @@ export class AiLogService {
 
   async findByUser(userId: number): Promise<AiInteractionLog[]> {
     return this.repo.find({
-      where: { user_id: userId },
+      where: { user: { id_usuario: userId } },
       order: { created_at: 'DESC' },
     });
   }

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ProdutoService } from './produto.service';
 import { CreateProdutoDto } from './dto/create-produto.dto';
@@ -28,7 +29,22 @@ export class ProdutoController {
   }
 
   @Get()
-  findAll() {
+  findAll(
+    @Query('cursor') cursor?: string,
+    @Query('limit') limit?: string,
+    @Query('search') search?: string,
+    @Query('id_categoria') id_categoria?: string,
+    @Query('id_fabricante') id_fabricante?: string,
+  ) {
+    if (cursor !== undefined || limit !== undefined || search || id_categoria || id_fabricante) {
+      return this.produtoService.findAllPaginated(
+        limit ? Math.min(parseInt(limit), 100) : 20,
+        cursor,
+        search,
+        id_categoria ? parseInt(id_categoria) : undefined,
+        id_fabricante ? parseInt(id_fabricante) : undefined,
+      );
+    }
     return this.produtoService.findAll();
   }
 

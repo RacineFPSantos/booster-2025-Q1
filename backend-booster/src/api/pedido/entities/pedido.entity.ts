@@ -29,9 +29,6 @@ export class Pedido {
   @Column({ name: 'id_cliente', type: 'int', nullable: false })
   id_cliente: number;
 
-  @Column({ name: 'id_usuario', type: 'int', nullable: false })
-  id_usuario: number;
-
   @OneToMany(() => PedidoItem, (item) => item.pedido, {
     cascade: true,
     eager: true,

@@ -2,8 +2,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Room } from './entities/room.entity'; // Verifique se o caminho da entidade está correto
-import { Message } from './entities/message.entity'; // Verifique se o caminho da entidade está correto
+import { Room } from './entities/room.entity';
+import { Message } from './entities/message.entity';
+import {
+  CursorPage,
+  encodeCursor,
+  decodeCursor,
+} from '../../shared/pagination/cursor-page';
+
+interface RoomCursor {
+  created_at: string;
+  id: string;
+}
+
+interface MessageCursor {
+  created_at: string;
+  id: string;
+}
 
 @Injectable()
 export class ChatService {
@@ -80,6 +95,41 @@ export class ChatService {
     });
   }
 
+  async getMessagesByRoomPaginated(
+    roomId: string,
+    limit = 50,
+    cursor?: string,
+  ): Promise<CursorPage<Message>> {
+    const qb = this.messageRepository
+      .createQueryBuilder('m')
+      .where('m.room_id = :roomId', { roomId })
+      .orderBy('m.created_at', 'ASC')
+      .addOrderBy('m.id', 'ASC')
+      .take(limit + 1);
+
+    if (cursor) {
+      const { created_at, id } = decodeCursor<MessageCursor>(cursor);
+      qb.andWhere(
+        '(m.created_at > :created_at) OR (m.created_at = :created_at AND m.id > :id)',
+        { created_at, id },
+      );
+    }
+
+    const rows = await qb.getMany();
+    const hasMore = rows.length > limit;
+    const data = hasMore ? rows.slice(0, limit) : rows;
+    const last = data[data.length - 1];
+    const nextCursor =
+      hasMore && last
+        ? encodeCursor({
+            created_at: last.created_at.toISOString(),
+            id: last.id,
+          })
+        : null;
+
+    return { data, nextCursor, hasMore, limit };
+  }
+
   // 4. (Para o Admin) Listar todas as salas aguardando suporte ou ativas
   async getWaitingRooms() {
     return await this.roomRepository.find({
@@ -104,6 +154,48 @@ export class ChatService {
     }
 
     return await queryBuilder.orderBy('room.created_at', 'DESC').getMany();
+  }
+
+  async getRoomsByFilterPaginated(
+    limit = 25,
+    cursor?: string,
+    status?: 'waiting' | 'active' | 'closed',
+    adminId?: string,
+  ): Promise<CursorPage<Room>> {
+    const qb = this.roomRepository.createQueryBuilder('room');
+
+    if (status) {
+      qb.andWhere('room.status = :status', { status });
+    }
+    if (adminId) {
+      qb.andWhere('room.admin_id = :adminId', { adminId });
+    }
+
+    if (cursor) {
+      const { created_at, id } = decodeCursor<RoomCursor>(cursor);
+      qb.andWhere(
+        '(room.created_at < :created_at) OR (room.created_at = :created_at AND room.id < :id)',
+        { created_at, id },
+      );
+    }
+
+    qb.orderBy('room.created_at', 'DESC')
+      .addOrderBy('room.id', 'DESC')
+      .take(limit + 1);
+
+    const rows = await qb.getMany();
+    const hasMore = rows.length > limit;
+    const data = hasMore ? rows.slice(0, limit) : rows;
+    const last = data[data.length - 1];
+    const nextCursor =
+      hasMore && last
+        ? encodeCursor({
+            created_at: last.created_at.toISOString(),
+            id: last.id,
+          })
+        : null;
+
+    return { data, nextCursor, hasMore, limit };
   }
 
   // 4c. Listar todas as salas (para admin ver tudo)

@@ -20,11 +20,11 @@ export class PedidoItem {
   @Column({ name: 'id_pedido', type: 'int', nullable: false })
   id_pedido: number;
 
-  @ManyToOne(() => Produto, { eager: true, nullable: true })
+  @ManyToOne(() => Produto, { eager: true, nullable: false, onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'id_produto' })
   produto: Produto;
 
-  @Column({ name: 'id_produto', type: 'int', nullable: true })
+  @Column({ name: 'id_produto', type: 'int', nullable: false })
   id_produto: number;
 
   @Column({ type: 'int', nullable: false, default: 1 })

@@ -1,5 +1,6 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards, ForbiddenException } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
+import { QueryProfilerService } from '../../core/database/query-profiler.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -9,7 +10,10 @@ import { UserRole } from '../../shared/enums/database.enums';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.ADMIN)
 export class DashboardController {
-  constructor(private readonly dashboardService: DashboardService) {}
+  constructor(
+    private readonly dashboardService: DashboardService,
+    private readonly queryProfilerService: QueryProfilerService,
+  ) {}
 
   /**
    * GET /dashboard/stats
@@ -36,5 +40,18 @@ export class DashboardController {
   @Get('low-stock')
   async getLowStock() {
     return this.dashboardService.getLowStockProducts();
+  }
+
+  /**
+   * GET /dashboard/explain
+   * Roda EXPLAIN ANALYZE nas queries críticas do sistema.
+   * Disponível apenas em ambiente de desenvolvimento.
+   */
+  @Get('explain')
+  async explainQueries() {
+    if (process.env.NODE_ENV === 'production') {
+      throw new ForbiddenException('Endpoint disponível apenas em desenvolvimento');
+    }
+    return this.queryProfilerService.profileCriticalQueries();
   }
 }

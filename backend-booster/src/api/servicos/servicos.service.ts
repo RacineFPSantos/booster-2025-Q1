@@ -5,6 +5,16 @@ import { Servico } from './entities/servico.entity';
 import { TipoServico } from './entities/tipo-servico.entity';
 import { Agendamento, StatusAgendamento } from './entities/agendamento.entity';
 import { CreateAgendamentoDto } from './dto/create-agendamento.dto';
+import {
+  CursorPage,
+  encodeCursor,
+  decodeCursor,
+} from '@shared/pagination/cursor-page';
+
+interface ServicoCursor {
+  nome: string;
+  id_servico: number;
+}
 
 @Injectable()
 export class ServicosService {
@@ -26,6 +36,65 @@ export class ServicosService {
       relations: ['tipo_servico'],
       order: { nome: 'ASC' },
     });
+  }
+
+  async findAllServicosPaginated(
+    limit = 20,
+    cursor?: string,
+    search?: string,
+    id_tipo_servico?: number,
+  ): Promise<CursorPage<Servico>> {
+    const qb = this.servicoRepository
+      .createQueryBuilder('s')
+      .leftJoinAndSelect('s.tipo_servico', 'tipo_servico')
+      .where('s.ativo = :ativo', { ativo: true })
+      .orderBy('s.nome', 'ASC')
+      .addOrderBy('s.id_servico', 'ASC')
+      .take(limit + 1);
+
+    if (cursor) {
+      const { nome, id_servico } = decodeCursor<ServicoCursor>(cursor);
+      qb.andWhere(
+        '(s.nome > :nome OR (s.nome = :nome AND s.id_servico > :id_servico))',
+        { nome, id_servico },
+      );
+    }
+
+    if (search) {
+      qb.andWhere(
+        '(LOWER(s.nome) LIKE :search OR LOWER(s.descricao) LIKE :search)',
+        { search: `%${search.toLowerCase()}%` },
+      );
+    }
+
+    if (id_tipo_servico) {
+      qb.andWhere('s.id_tipo_servico = :id_tipo_servico', { id_tipo_servico });
+    }
+
+    const countQb = this.servicoRepository
+      .createQueryBuilder('s')
+      .where('s.ativo = :ativo', { ativo: true });
+
+    if (search) {
+      countQb.andWhere(
+        '(LOWER(s.nome) LIKE :search OR LOWER(s.descricao) LIKE :search)',
+        { search: `%${search.toLowerCase()}%` },
+      );
+    }
+    if (id_tipo_servico) {
+      countQb.andWhere('s.id_tipo_servico = :id_tipo_servico', { id_tipo_servico });
+    }
+
+    const [rows, total] = await Promise.all([qb.getMany(), countQb.getCount()]);
+    const hasMore = rows.length > limit;
+    const data = hasMore ? rows.slice(0, limit) : rows;
+    const last = data[data.length - 1];
+    const nextCursor =
+      hasMore && last
+        ? encodeCursor({ nome: last.nome, id_servico: last.id_servico })
+        : null;
+
+    return { data, nextCursor, hasMore, limit, total };
   }
 
   /**

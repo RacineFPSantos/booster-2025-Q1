@@ -2,7 +2,7 @@
 
 Repositório do sistema **AI Car** desenvolvido durante o Booster 2025-Q1 da Pitang.
 
-O projeto é composto por um backend em NestJS e um frontend em React, com banco de dados PostgreSQL (local via Docker ou remoto via Supabase).
+O projeto é composto por um backend em NestJS e um frontend em React, com banco de dados PostgreSQL (local via Docker ou remoto via Supabase), tambem foi adicionado um estrutura de chat via GenKit para uso de IA.
 
 ---
 

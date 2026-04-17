@@ -1,3 +1,11 @@
+export interface CursorPage<T> {
+  data: T[];
+  nextCursor: string | null;
+  hasMore: boolean;
+  limit: number;
+  total?: number;
+}
+
 export interface TipoServico {
   id_tipo_servico: number;
   nome: string;

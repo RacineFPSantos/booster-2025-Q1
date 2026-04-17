@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { DatabaseModule } from './core/database/database.module';
+import { AppCacheModule } from './core/cache/cache.module';
 import { AuthModule } from './api/auth/auth.module';
 import { UserModule } from './api/users/user.module';
 import { CategoriaModule } from './api/catalog/categoria/categoria.module';
@@ -21,6 +22,7 @@ import { HealthController } from './health/health.controller';
     ConfigModule.forRoot({ isGlobal: true }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
     DatabaseModule,
+    AppCacheModule,
     AuthModule,
     UserModule,
     CategoriaModule,

@@ -5,6 +5,7 @@ import {
   Body,
   Param,
   Patch,
+  Query,
   UseGuards,
   Request,
 } from '@nestjs/common';
@@ -20,7 +21,20 @@ export class ServicosController {
   constructor(private readonly servicosService: ServicosService) {}
 
   @Get()
-  async findAllServicos() {
+  async findAllServicos(
+    @Query('cursor') cursor?: string,
+    @Query('limit') limit?: string,
+    @Query('search') search?: string,
+    @Query('id_tipo_servico') id_tipo_servico?: string,
+  ) {
+    if (cursor !== undefined || limit !== undefined || search || id_tipo_servico) {
+      return this.servicosService.findAllServicosPaginated(
+        limit ? Math.min(parseInt(limit), 100) : 20,
+        cursor,
+        search,
+        id_tipo_servico ? parseInt(id_tipo_servico) : undefined,
+      );
+    }
     return this.servicosService.findAllServicos();
   }
 

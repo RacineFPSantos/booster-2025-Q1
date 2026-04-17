@@ -1,119 +1,128 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { ProdutoCard } from "@/components/cards/ProdutoCard";
 import { ProdutoService } from "@/services/produtoService";
 import type { Produto, Categoria, Fabricante } from "@/types/produto.types";
-import { Search, Filter, Loader2, Package } from "lucide-react";
+import { Search, Filter, Loader2, Package, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
+const PAGE_SIZE_OPTIONS = [10, 20, 40, 80] as const;
+
 export function Pecas() {
   const [searchParams] = useSearchParams();
   const { addProduto } = useCart();
+
   const [produtos, setProdutos] = useState<Produto[]>([]);
-  const [produtosFiltrados, setProdutosFiltrados] = useState<Produto[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [fabricantes, setFabricantes] = useState<Fabricante[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
   const [busca, setBusca] = useState("");
+  const [debouncedBusca, setDebouncedBusca] = useState("");
   const [categoriaFiltro, setCategoriaFiltro] = useState<string>("");
   const [fabricanteFiltro, setFabricanteFiltro] = useState<string>("");
+  const [pageSize, setPageSize] = useState(20);
+
+  const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined);
+  const [cursorStack, setCursorStack] = useState<Array<string | undefined>>([]);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(false);
+  const [total, setTotal] = useState(0);
+
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const pageNumber = cursorStack.length + 1;
+  const totalPages = total > 0 ? Math.ceil(total / pageSize) : pageNumber;
 
   useEffect(() => {
-    loadData();
+    Promise.all([
+      ProdutoService.findAllCategorias(),
+      ProdutoService.findAllFabricantes(),
+    ])
+      .then(([cats, fabs]) => {
+        setCategorias(cats);
+        setFabricantes(fabs);
+      })
+      .catch(() => toast.error("Erro ao carregar filtros."));
   }, []);
 
   useEffect(() => {
-    aplicarFiltros();
-  }, [busca, categoriaFiltro, fabricanteFiltro, produtos]);
-
-  // Aplicar filtros da URL quando os dados são carregados
-  useEffect(() => {
-    // Aplicar busca da URL
     const searchQuery = searchParams.get("search");
     if (searchQuery) {
       setBusca(searchQuery);
+      setDebouncedBusca(searchQuery);
     }
 
-    // Aplicar filtro de categoria da URL
     if (categorias.length > 0) {
-      const categoriaNome = searchParams.get("categoria");
-      if (categoriaNome) {
-        // Normalizar: remover acentos e converter para maiúsculas para comparação
-        const normalizarString = (str: string) => {
-          return str
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toUpperCase();
-        };
-
-        const categoriaNormalizada = normalizarString(categoriaNome);
-
-        const categoriaEncontrada = categorias.find(
-          (cat) => normalizarString(cat.nome) === categoriaNormalizada,
-        );
-
-        if (categoriaEncontrada) {
-          setCategoriaFiltro(String(categoriaEncontrada.id_categoria));
-        }
+      const catNome = searchParams.get("categoria");
+      if (catNome) {
+        const norm = (s: string) =>
+          s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+        const cat = categorias.find((c) => norm(c.nome) === norm(catNome));
+        if (cat) setCategoriaFiltro(String(cat.id_categoria));
       }
     }
   }, [categorias, searchParams]);
 
-  const loadData = async () => {
-    try {
-      setIsLoading(true);
-      const [produtosData, categoriasData, fabricantesData] = await Promise.all(
-        [
-          ProdutoService.findAll(),
-          ProdutoService.findAllCategorias(),
-          ProdutoService.findAllFabricantes(),
-        ],
-      );
+  useEffect(() => {
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setDebouncedBusca(busca);
+    }, 400);
+    return () => clearTimeout(debounceRef.current);
+  }, [busca]);
 
-      setProdutos(produtosData);
-      setProdutosFiltrados(produtosData);
-      setCategorias(categoriasData);
-      setFabricantes(fabricantesData);
-    } catch (error) {
-      console.error("Erro ao carregar produtos:", error);
-      toast.error("Erro ao carregar produtos. Tente novamente.");
-    } finally {
-      setIsLoading(false);
-    }
+  useEffect(() => {
+    setCurrentCursor(undefined);
+    setCursorStack([]);
+    setNextCursor(null);
+  }, [debouncedBusca, categoriaFiltro, fabricanteFiltro, pageSize]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const result = await ProdutoService.findAllPaginated(
+          pageSize,
+          currentCursor,
+          debouncedBusca || undefined,
+          categoriaFiltro ? Number(categoriaFiltro) : undefined,
+          fabricanteFiltro ? Number(fabricanteFiltro) : undefined,
+        );
+        if (!cancelled) {
+          setProdutos(result.data);
+          setHasMore(result.hasMore);
+          setNextCursor(result.nextCursor);
+          setTotal(result.total);
+        }
+      } catch {
+        if (!cancelled) toast.error("Erro ao carregar produtos. Tente novamente.");
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+
+    fetchData();
+    return () => {
+      cancelled = true;
+    };
+  }, [currentCursor, pageSize, debouncedBusca, categoriaFiltro, fabricanteFiltro]);
+
+  const goToNextPage = () => {
+    if (!nextCursor) return;
+    setCursorStack((prev) => [...prev, currentCursor]);
+    setCurrentCursor(nextCursor);
   };
 
-  const aplicarFiltros = () => {
-    let resultado = [...produtos];
-
-    // Filtro de busca por nome ou descrição
-    if (busca) {
-      const buscaLower = busca.toLowerCase();
-      resultado = resultado.filter(
-        (p) =>
-          p.nome.toLowerCase().includes(buscaLower) ||
-          p.descricao?.toLowerCase().includes(buscaLower),
-      );
-    }
-
-    // Filtro por categoria
-    if (categoriaFiltro) {
-      resultado = resultado.filter((p) => {
-        const idCat = Number(p.id_categoria ?? p.categoria?.id_categoria);
-        return idCat === Number(categoriaFiltro);
-      });
-    }
-
-    // Filtro por fabricante
-    if (fabricanteFiltro) {
-      resultado = resultado.filter((p) => {
-        const idFab = Number(p.id_fabricante ?? p.fabricante?.id_fabricante);
-        return idFab === Number(fabricanteFiltro);
-      });
-    }
-
-    setProdutosFiltrados(resultado);
+  const goToPrevPage = () => {
+    if (cursorStack.length === 0) return;
+    const prevCursor = cursorStack[cursorStack.length - 1];
+    setCursorStack((prev) => prev.slice(0, -1));
+    setCurrentCursor(prevCursor);
   };
 
   const limparFiltros = () => {
@@ -126,7 +135,7 @@ export function Pecas() {
     addProduto(produto, 1);
   };
 
-  if (isLoading) {
+  if (isLoading && produtos.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center">
@@ -214,6 +223,21 @@ export function Pecas() {
               </select>
             </div>
 
+            {/* Itens por página */}
+            <div className="w-full lg:w-40">
+              <select
+                className="w-full px-3 py-2 bg-theme-bg border border-theme-border text-theme-text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-brand-blue transition-colors duration-300"
+                value={pageSize}
+                onChange={(e) => setPageSize(Number(e.target.value))}
+              >
+                {PAGE_SIZE_OPTIONS.map((size) => (
+                  <option key={size} value={size}>
+                    {size} por página
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* Botão Limpar */}
             {(busca || categoriaFiltro || fabricanteFiltro) && (
               <Button variant="outline" onClick={limparFiltros}>
@@ -223,25 +247,25 @@ export function Pecas() {
             )}
           </div>
 
-          {/* Contador de resultados */}
-          <div className="mt-4 text-sm text-theme-text-secondary">
-            {produtosFiltrados.length === 0 ? (
-              <span>Nenhuma peça encontrada</span>
-            ) : (
-              <span>
-                {produtosFiltrados.length}{" "}
-                {produtosFiltrados.length === 1
-                  ? "peça encontrada"
-                  : "peças encontradas"}
-              </span>
-            )}
+          {/* Contador de resultados e página */}
+          <div className="mt-4 flex items-center justify-between text-sm text-theme-text-secondary">
+            <span>
+              {isLoading ? (
+                "Carregando..."
+              ) : total === 0 ? (
+                "Nenhuma peça encontrada"
+              ) : (
+                `${total} ${total === 1 ? "peça encontrada" : "peças encontradas"}`
+              )}
+            </span>
+            <span>Página {pageNumber} de {totalPages}</span>
           </div>
         </div>
       </div>
 
       {/* Grid de Produtos */}
       <div className="container mx-auto px-4 py-8">
-        {produtosFiltrados.length === 0 ? (
+        {!isLoading && produtos.length === 0 ? (
           <div className="text-center py-12">
             <Package className="h-16 w-16 text-theme-text-muted mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-theme-text-primary mb-2">
@@ -257,15 +281,48 @@ export function Pecas() {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {produtosFiltrados.map((produto) => (
-              <ProdutoCard
-                key={produto.id_produto}
-                produto={produto}
-                onAddToCart={handleAddToCart}
-              />
-            ))}
-          </div>
+          <>
+            {isLoading ? (
+              <div className="flex justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-brand-blue" />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {produtos.map((produto) => (
+                  <ProdutoCard
+                    key={produto.id_produto}
+                    produto={produto}
+                    onAddToCart={handleAddToCart}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Paginação */}
+            <div className="flex items-center justify-center gap-4 mt-8">
+              <Button
+                variant="outline"
+                onClick={goToPrevPage}
+                disabled={cursorStack.length === 0 || isLoading}
+              >
+                <ChevronLeft className="h-4 w-4 mr-1" />
+                Anterior
+              </Button>
+
+              <span className="text-sm text-theme-text-secondary font-medium">
+                Página {pageNumber} de {totalPages}
+              </span>
+
+              <Button
+                variant="outline"
+                onClick={goToNextPage}
+                disabled={!hasMore || isLoading}
+              >
+                Próximo
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          </>
         )}
       </div>
     </>

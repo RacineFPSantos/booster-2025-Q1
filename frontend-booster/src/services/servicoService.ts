@@ -4,6 +4,7 @@ import type {
   TipoServico,
   Agendamento,
   CreateAgendamentoDto,
+  CursorPage,
 } from "@/types/servico.types";
 
 export class ServicoService {
@@ -12,6 +13,20 @@ export class ServicoService {
    */
   static async findAll(): Promise<Servico[]> {
     const response = await api.get<Servico[]>("/servicos");
+    return response.data;
+  }
+
+  static async findAllPaginated(
+    limit: number,
+    cursor?: string,
+    search?: string,
+    id_tipo_servico?: number,
+  ): Promise<CursorPage<Servico>> {
+    const params: Record<string, string | number> = { limit };
+    if (cursor) params.cursor = cursor;
+    if (search) params.search = search;
+    if (id_tipo_servico) params.id_tipo_servico = id_tipo_servico;
+    const response = await api.get<CursorPage<Servico>>("/servicos", { params });
     return response.data;
   }
 

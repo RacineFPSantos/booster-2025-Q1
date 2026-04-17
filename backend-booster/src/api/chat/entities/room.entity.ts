@@ -17,8 +17,7 @@ export class Room {
   admin_id?: string;
 
   @Column({
-    type: 'enum',
-    enum: ['waiting', 'active', 'closed'],
+    type: 'varchar',
     default: 'waiting',
   })
   status: string;

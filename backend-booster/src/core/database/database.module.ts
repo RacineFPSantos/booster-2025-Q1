@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import type { LogLevel } from 'typeorm';
+import { QueryProfilerService } from './query-profiler.service';
+
+const isDev = process.env.NODE_ENV !== 'production';
 
 @Module({
   imports: [
@@ -8,18 +12,25 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       useFactory: (configService: ConfigService) => {
         const databaseUrl = configService.get('DATABASE_URL');
 
+        const sharedOptions = {
+          autoLoadEntities: true,
+          synchronize: false,
+          migrations: ['dist/databases/migrations/*.js'],
+          migrationsRun: false,
+          // Em dev: loga queries que demoram mais de 200ms
+          logging: (isDev ? ['warn', 'error', 'slow'] : ['error']) as LogLevel[],
+          maxQueryExecutionTime: isDev ? 200 : undefined,
+        };
+
         // Se DATABASE_URL existir, usa ela (Supabase/produção)
         if (databaseUrl) {
           return {
             type: 'postgres',
             url: databaseUrl,
-            autoLoadEntities: true,
-            synchronize: false,
-            migrations: ['dist/databases/migrations/*.js'],
-            migrationsRun: false,
             ssl: {
               rejectUnauthorized: false, // Necessário para Supabase
             },
+            ...sharedOptions,
           };
         }
 
@@ -31,14 +42,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
           database: configService.getOrThrow('POSTGRES_DB'),
           username: configService.getOrThrow('POSTGRES_USER'),
           password: configService.getOrThrow('POSTGRES_PASSWORD'),
-          autoLoadEntities: true,
-          synchronize: false,
-          migrations: ['dist/databases/migrations/*.js'],
-          migrationsRun: false,
+          ...sharedOptions,
         };
       },
       inject: [ConfigService],
     }),
   ],
+  providers: [QueryProfilerService],
+  exports: [QueryProfilerService],
 })
 export class DatabaseModule {}

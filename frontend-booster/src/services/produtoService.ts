@@ -5,6 +5,7 @@ import type {
   UpdateProdutoDto,
   Categoria,
   Fabricante,
+  CursorPage,
 } from "@/types/produto.types";
 
 /**
@@ -17,6 +18,22 @@ export class ProdutoService {
    */
   static async findAll(): Promise<Produto[]> {
     const response = await api.get<Produto[]>("/produto");
+    return response.data;
+  }
+
+  static async findAllPaginated(
+    limit: number,
+    cursor?: string,
+    search?: string,
+    id_categoria?: number,
+    id_fabricante?: number,
+  ): Promise<CursorPage<Produto>> {
+    const params: Record<string, string | number> = { limit };
+    if (cursor) params.cursor = cursor;
+    if (search) params.search = search;
+    if (id_categoria) params.id_categoria = id_categoria;
+    if (id_fabricante) params.id_fabricante = id_fabricante;
+    const response = await api.get<CursorPage<Produto>>("/produto", { params });
     return response.data;
   }
 

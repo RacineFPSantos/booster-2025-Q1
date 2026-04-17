@@ -42,7 +42,18 @@ export class ChatController {
 
   // Qualquer usuário autenticado pode ver mensagens de uma sala
   @Get('rooms/:roomId/messages')
-  async getMessages(@Param('roomId') roomId: string) {
+  async getMessages(
+    @Param('roomId') roomId: string,
+    @Query('cursor') cursor?: string,
+    @Query('limit') limit?: string,
+  ) {
+    if (cursor !== undefined || limit !== undefined) {
+      return await this.chatService.getMessagesByRoomPaginated(
+        roomId,
+        limit ? Math.min(parseInt(limit), 100) : 50,
+        cursor,
+      );
+    }
     return await this.chatService.getMessagesByRoom(roomId);
   }
 
@@ -60,7 +71,17 @@ export class ChatController {
   async getRoomsByFilter(
     @Query('status') status?: 'waiting' | 'active' | 'closed',
     @Query('adminId') adminId?: string,
+    @Query('cursor') cursor?: string,
+    @Query('limit') limit?: string,
   ) {
+    if (cursor !== undefined || limit !== undefined) {
+      return await this.chatService.getRoomsByFilterPaginated(
+        limit ? Math.min(parseInt(limit), 100) : 25,
+        cursor,
+        status,
+        adminId,
+      );
+    }
     return await this.chatService.getRoomsByFilter(status, adminId);
   }
 

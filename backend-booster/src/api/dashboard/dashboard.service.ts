@@ -1,10 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
 import { Repository, LessThan } from 'typeorm';
 import { Pedido } from '../pedido/entities/pedido.entity';
 import { Produto } from '../catalog/produto/entities/produto.entity';
 import { User } from '../users/entities/user.entity';
 import { UserRole } from '../../shared/enums/database.enums';
+
+const CACHE_TTL_STATS = 15 * 60 * 1000; // 15 minutos em ms
+const CACHE_TTL_RECENT_ORDERS = 2 * 60 * 1000; // 2 minutos em ms
+const CACHE_KEY_STATS = 'dashboard:stats';
+const CACHE_KEY_RECENT_ORDERS = 'dashboard:recent-orders';
 
 @Injectable()
 export class DashboardService {
@@ -15,12 +22,17 @@ export class DashboardService {
     private readonly produtoRepository: Repository<Produto>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @Inject(CACHE_MANAGER)
+    private readonly cacheManager: Cache,
   ) {}
 
   /**
    * Retorna estatísticas gerais do sistema
    */
   async getStats() {
+    const cached = await this.cacheManager.get(CACHE_KEY_STATS);
+    if (cached) return cached;
+
     const now = new Date();
     const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -69,7 +81,7 @@ export class DashboardService {
       totalOrders - ordersThisMonth,
     );
 
-    return {
+    const result = {
       sales: {
         total: parseFloat(salesThisMonth?.total || 0),
         change: salesChange,
@@ -80,24 +92,33 @@ export class DashboardService {
       },
       products: {
         total: totalProducts,
-        change: 0, // Pode implementar lógica de variação depois
+        change: 0,
       },
       clients: {
         total: totalClients,
-        change: 0, // Pode implementar lógica de variação depois
+        change: 0,
       },
     };
+
+    await this.cacheManager.set(CACHE_KEY_STATS, result, CACHE_TTL_STATS);
+    return result;
   }
 
   /**
    * Retorna os pedidos recentes (últimos 10)
    */
   async getRecentOrders() {
-    return this.pedidoRepository.find({
+    const cached = await this.cacheManager.get(CACHE_KEY_RECENT_ORDERS);
+    if (cached) return cached;
+
+    const orders = await this.pedidoRepository.find({
       take: 10,
       order: { created_at: 'DESC' },
       relations: ['usuario'],
     });
+
+    await this.cacheManager.set(CACHE_KEY_RECENT_ORDERS, orders, CACHE_TTL_RECENT_ORDERS);
+    return orders;
   }
 
   /**

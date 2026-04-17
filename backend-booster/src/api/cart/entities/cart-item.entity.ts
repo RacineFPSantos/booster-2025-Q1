@@ -20,7 +20,7 @@ export class CartItem {
   @Column({ name: 'id_carrinho', type: 'int', nullable: false })
   id_carrinho: number;
 
-  @ManyToOne(() => Produto, { eager: true })
+  @ManyToOne(() => Produto, { eager: true, nullable: false, onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'id_produto' })
   produto: Produto;
 

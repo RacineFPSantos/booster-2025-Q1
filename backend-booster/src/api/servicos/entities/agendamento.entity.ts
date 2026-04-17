@@ -25,6 +25,7 @@ export class Agendamento {
 
   @ManyToOne(() => Servico, (servico) => servico.agendamentos, {
     nullable: false,
+    onDelete: 'RESTRICT',
   })
   @JoinColumn({ name: 'id_servico' })
   servico: Servico;
@@ -32,7 +33,7 @@ export class Agendamento {
   @Column({ name: 'id_usuario', type: 'int', nullable: true })
   id_usuario: number | null;
 
-  @ManyToOne(() => User, { nullable: true })
+  @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'id_usuario' })
   usuario: User | null;
 
