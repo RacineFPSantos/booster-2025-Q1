@@ -32,7 +32,7 @@ export function Pecas() {
   const [hasMore, setHasMore] = useState(false);
   const [total, setTotal] = useState(0);
 
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const pageNumber = cursorStack.length + 1;
   const totalPages = total > 0 ? Math.ceil(total / pageSize) : pageNumber;
 
@@ -97,7 +97,7 @@ export function Pecas() {
           setProdutos(result.data);
           setHasMore(result.hasMore);
           setNextCursor(result.nextCursor);
-          setTotal(result.total);
+          setTotal(result.total ?? 0);
         }
       } catch {
         if (!cancelled) toast.error("Erro ao carregar produtos. Tente novamente.");

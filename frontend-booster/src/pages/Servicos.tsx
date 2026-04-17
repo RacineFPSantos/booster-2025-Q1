@@ -38,7 +38,7 @@ export function Servicos() {
   const [servicoSelecionado, setServicoSelecionado] = useState<Servico | null>(null);
   const [pendingServico, setPendingServico] = useState<Servico | null>(null);
 
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const pageNumber = cursorStack.length + 1;
   const totalPages = total > 0 ? Math.ceil(total / pageSize) : pageNumber;
 
@@ -90,7 +90,7 @@ export function Servicos() {
           setServicos(result.data);
           setHasMore(result.hasMore);
           setNextCursor(result.nextCursor);
-          setTotal(result.total);
+          setTotal(result.total ?? 0);
         }
       } catch {
         if (!cancelled) toast.error("Erro ao carregar serviços. Tente novamente.");
