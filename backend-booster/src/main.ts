@@ -6,7 +6,31 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { join } from 'path';
 
+function normalizeEnv() {
+  for (const key of [
+    'DATABASE_URL',
+    'JWT_SECRET',
+    'FRONTEND_URL',
+    'GOOGLE_GENAI_API_KEY',
+    'PORT',
+  ]) {
+    if (process.env[key]) {
+      process.env[key] = process.env[key]?.trim();
+    }
+  }
+}
+
 async function bootstrap() {
+  normalizeEnv();
+  console.log('Starting backend bootstrap', {
+    nodeEnv: process.env.NODE_ENV ?? 'development',
+    port: process.env.PORT ?? '3000',
+    hasDatabaseUrl: Boolean(process.env.DATABASE_URL),
+    hasJwtSecret: Boolean(process.env.JWT_SECRET),
+    hasFrontendUrl: Boolean(process.env.FRONTEND_URL),
+    hasGoogleGenaiApiKey: Boolean(process.env.GOOGLE_GENAI_API_KEY),
+  });
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Servir arquivos estáticos da pasta public/
@@ -68,6 +92,7 @@ async function bootstrap() {
 
   const port = Number(process.env.PORT) || 8080;
   await app.listen(port);
+
   console.log(`🚀 Backend rodando na porta ${port}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV ?? 'development'}`);
 }

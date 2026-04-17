@@ -15,8 +15,11 @@ const isDev = process.env.NODE_ENV !== 'production';
         const sharedOptions = {
           autoLoadEntities: true,
           synchronize: false,
-          migrations: ['dist/databases/migrations/*.js'],
+          migrations: ['dist/core/database/migrations/*.js'],
           migrationsRun: false,
+          retryAttempts: 3,
+          retryDelay: 1000,
+          connectTimeoutMS: 10000,
           // Em dev: loga queries que demoram mais de 200ms
           logging: (isDev ? ['warn', 'error', 'slow'] : ['error']) as LogLevel[],
           maxQueryExecutionTime: isDev ? 200 : undefined,

@@ -13,7 +13,14 @@ export class EnumValidatorService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    await this.validateStatusPedidoEnum();
+    try {
+      await this.validateStatusPedidoEnum();
+    } catch (error) {
+      this.logger.error(
+        'Falha ao validar enums do banco de dados (nÃ£o-crÃ­tico):',
+        error,
+      );
+    }
   }
 
   private async validateStatusPedidoEnum() {
