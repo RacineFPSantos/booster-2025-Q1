@@ -6,6 +6,17 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
  */
 export class InitialSchema1800000000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
+    const [{ exists: baselineExists }] = await queryRunner.query<[{ exists: boolean }]>(`
+      SELECT (
+        to_regclass('public.usuario') IS NOT NULL
+        AND to_regclass('public.servico') IS NOT NULL
+      ) AS exists
+    `);
+
+    if (baselineExists) {
+      return;
+    }
+
     // -------------------------------------------------------------------------
     // Função de atualização automática de updated_at
     // -------------------------------------------------------------------------
@@ -25,13 +36,25 @@ export class InitialSchema1800000000000 implements MigrationInterface {
     // ENUMs
     // -------------------------------------------------------------------------
     await queryRunner.query(`
-      CREATE TYPE usuario_role_enum AS ENUM ('CLIENT', 'ADMIN')
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'usuario_role_enum') THEN
+          CREATE TYPE usuario_role_enum AS ENUM ('CLIENT', 'ADMIN');
+        END IF;
+      END;
+      $$
     `);
 
     await queryRunner.query(`
-      CREATE TYPE status_pedido_enum AS ENUM (
-        'PENDENTE', 'CONFIRMADO', 'ENVIADO', 'ENTREGUE', 'CANCELADO'
-      )
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'status_pedido_enum') THEN
+          CREATE TYPE status_pedido_enum AS ENUM (
+            'PENDENTE', 'CONFIRMADO', 'ENVIADO', 'ENTREGUE', 'CANCELADO'
+          );
+        END IF;
+      END;
+      $$
     `);
 
     // -------------------------------------------------------------------------

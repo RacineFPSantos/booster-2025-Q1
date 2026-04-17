@@ -22,7 +22,7 @@ export class EnablePgvector1800000000001 implements MigrationInterface {
     `);
 
     await queryRunner.query(`
-      CREATE INDEX idx_rag_document_embedding
+      CREATE INDEX IF NOT EXISTS idx_rag_document_embedding
         ON rag_document
         USING ivfflat (embedding vector_cosine_ops)
         WITH (lists = 100)

@@ -34,23 +34,6 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-          cache-dependency-path: "backend-booster/package-lock.json"
-
-      - name: Install backend dependencies
-        working-directory: ./backend-booster
-        run: npm ci
-
-      - name: Run database migrations
-        working-directory: ./backend-booster
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: npm run migration:run
-
       - name: Configure Docker to use gcloud
         run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
 
@@ -79,12 +62,14 @@ jobs:
 
       - name: Show Cloud Run logs on failure
         if: failure()
+        continue-on-error: true
         run: |
           gcloud logging read 'resource.type="cloud_run_revision" AND resource.labels.service_name="${{ env.SERVICE_NAME }}"' \
             --project "${{ env.PROJECT_ID }}" \
             --limit 80 \
             --order desc \
-            --format 'value(timestamp,severity,textPayload,jsonPayload.message,protoPayload.status.message)'
+            --format 'value(timestamp,severity,textPayload,jsonPayload.message,protoPayload.status.message)' \
+          || echo "Could not read Cloud Run logs. Grant roles/logging.viewer to the GitHub Actions service account to enable this diagnostic step."
 
       - name: Show deployment URL
         run: |

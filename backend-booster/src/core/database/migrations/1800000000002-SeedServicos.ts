@@ -6,6 +6,14 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
  */
 export class SeedServicos1800000000002 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
+    const [{ count }] = await queryRunner.query<[{ count: string }]>(`
+      SELECT COUNT(*)::int AS count FROM servico
+    `);
+
+    if (Number(count) > 0) {
+      return;
+    }
+
     await queryRunner.query(`
       INSERT INTO tipo_servico (nome, descricao) VALUES
         ('Manutenção Preventiva', 'Serviços de manutenção regular e preventiva do veículo'),
