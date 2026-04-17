@@ -14,7 +14,9 @@
       "Bash(node -e \"const p = require\\('./node_modules/@keyv/redis/package.json'\\); console.log\\(p.version\\)\")",
       "Bash(node -e \"const p = require\\('./node_modules/@keyv/redis/package.json'\\); console.log\\(p.version, Object.keys\\(p.exports || {}\\).slice\\(0,3\\)\\)\")",
       "Bash(grep -E \"\\\\.tsx$\")",
-      "Bash(npm list *)"
+      "Bash(npm list *)",
+      "Bash(node -e \"require\\('./dist/main'\\)\")",
+      "Bash(node dist/main.js)"
     ]
   }
 }
