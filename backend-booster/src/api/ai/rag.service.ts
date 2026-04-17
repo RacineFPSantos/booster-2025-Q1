@@ -33,18 +33,21 @@ export class RagService implements OnModuleInit {
     private readonly genkitService: GenkitService,
   ) {}
 
-  async onModuleInit(): Promise<void> {
-    try {
-      const [{ count }] = await this.dataSource.query<[{ count: string }]>(
-        `SELECT COUNT(*)::int AS count FROM rag_document`,
-      );
-      if (Number(count) === 0) {
-        await this.indexAll();
-      } else {
-        this.logger.log(`RAG: ${count} documentos já indexados.`);
-      }
-    } catch (err) {
-      this.logger.error('Falha na inicialização do RAG (não-crítico):', err);
+  onModuleInit(): void {
+    // Fire-and-forget: indexação não pode bloquear o startup do servidor
+    this.checkAndIndex().catch((err) =>
+      this.logger.error('Falha na inicialização do RAG (não-crítico):', err),
+    );
+  }
+
+  private async checkAndIndex(): Promise<void> {
+    const [{ count }] = await this.dataSource.query<[{ count: string }]>(
+      `SELECT COUNT(*)::int AS count FROM rag_document`,
+    );
+    if (Number(count) === 0) {
+      await this.indexAll();
+    } else {
+      this.logger.log(`RAG: ${count} documentos já indexados.`);
     }
   }
 

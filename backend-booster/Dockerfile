@@ -41,12 +41,12 @@ RUN chown -R nestjs:nodejs /app
 # Switch to non-root user
 USER nestjs
 
-# Expose port (Cloud Run will set PORT env variable)
-EXPOSE 3000
+# Cloud Run injeta PORT=8080; fallback local é 3000
+EXPOSE 8080
 
-# Health check
+# Health check respeitando a variável PORT
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s \
-  CMD node -e "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+  CMD node -e "require('http').get('http://localhost:'+(process.env.PORT||3000)+'/health',(r)=>{process.exit(r.statusCode===200?0:1)})"
 
 # Start application
 CMD ["node", "dist/main"]
